@@ -50,7 +50,37 @@
     background: var(--bg);
   }
 
-  .slide.active { display: flex; }
+  .slide.active {
+    display: flex;
+    animation: slide-fade-in 280ms ease;
+  }
+
+  @keyframes slide-fade-in {
+    from { opacity: 0; transform: translateY(14px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .slide.active { animation: none; }
+    #deck-progress-fill { transition: none; }
+  }
+
+  #deck-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: var(--surface);
+    z-index: 20;
+  }
+
+  #deck-progress-fill {
+    height: 100%;
+    width: 0%;
+    background: var(--teal);
+    transition: width 300ms ease;
+  }
 
   .slide__eyebrow {
     color: var(--teal);
@@ -320,6 +350,8 @@
 </style>
 </head>
 <body>
+
+  <div id="deck-progress"><div id="deck-progress-fill"></div></div>
 
   <img class="deck-logo" src="assets/logo-white.png" alt="SC Creative">
 
@@ -595,6 +627,7 @@
     function render() {
       slides.forEach((s, i) => s.classList.toggle('active', i === current));
       counter.textContent = (current + 1) + ' / ' + slides.length;
+      document.getElementById('deck-progress-fill').style.width = ((current + 1) / slides.length * 100) + '%';
     }
     function goTo(n) { current = Math.max(0, Math.min(slides.length - 1, n)); render(); }
     function next() { goTo(current + 1); }
