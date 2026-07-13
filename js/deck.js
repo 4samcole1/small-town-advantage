@@ -26,6 +26,7 @@
     if (counter) counter.innerHTML = '<b>' + (current + 1) + '</b> / ' + slides.length;
     if (fill) fill.style.width = ((current + 1) / slides.length * 100) + '%';
     typeActiveHeadlines();
+    if (window.DeckActive) window.DeckActive.activate(slides[current]);
   }
   function goTo(n) { current = Math.max(0, Math.min(slides.length - 1, n)); render(); }
   const next = () => goTo(current + 1);
