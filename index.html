@@ -149,6 +149,74 @@
     margin-top: .75rem;
     line-height: 1.3;
   }
+
+  /* Scenario template (slides 6–11) */
+  .scenario-header {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .scenario-header .slide__title {
+    font-size: clamp(2rem, 4vw, 3.4rem);
+  }
+
+  .scenario-icon {
+    font-size: clamp(2.2rem, 4vw, 3.2rem);
+    line-height: 1;
+  }
+
+  .scenario {
+    display: flex;
+    align-items: stretch;
+    gap: 1.25rem;
+    width: 100%;
+  }
+
+  .scenario__step {
+    flex: 1;
+    min-width: 0;
+    background: var(--surface);
+    border: 1px solid var(--soft-border);
+    border-radius: 16px;
+    padding: 1.75rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: .75rem;
+  }
+
+  .scenario__step--result {
+    border-color: var(--teal);
+    box-shadow: 0 0 0 1px var(--teal), 0 20px 45px var(--teal-glow);
+  }
+
+  .scenario__label {
+    color: var(--teal);
+    text-transform: uppercase;
+    letter-spacing: .12em;
+    font-weight: 600;
+    font-size: clamp(.8rem, 1.1vw, 1rem);
+  }
+
+  .scenario__text {
+    color: var(--text-neutral);
+    font-size: clamp(1rem, 1.5vw, 1.3rem);
+    line-height: 1.45;
+  }
+
+  .scenario__step--result .scenario__text {
+    color: var(--text);
+    font-weight: 500;
+    font-style: italic;
+  }
+
+  .scenario__arrow {
+    align-self: center;
+    color: var(--gold);
+    font-size: clamp(1.4rem, 2.2vw, 2.1rem);
+    flex-shrink: 0;
+  }
 </style>
 </head>
 <body>
@@ -197,6 +265,144 @@
     <p class="slide__eyebrow">In plain English</p>
     <h1 class="slide__title">A very smart assistant that never sleeps.</h1>
     <p class="slide__body">It reads, writes, answers, and organizes &mdash; instantly, around the clock &mdash; so you and your people don&rsquo;t have to.</p>
+  </section>
+
+  <section class="slide">
+    <div class="scenario-header">
+      <span class="scenario-icon" aria-hidden="true">&#127963;&#65039;</span>
+      <h1 class="slide__title">City of Jasper</h1>
+    </div>
+    <div class="scenario">
+      <div class="scenario__step">
+        <p class="scenario__label">The problem</p>
+        <p class="scenario__text">Residents flood the office with the same questions &mdash; trash pickup, permits, payments.</p>
+      </div>
+      <div class="scenario__arrow" aria-hidden="true">&rarr;</div>
+      <div class="scenario__step">
+        <p class="scenario__label">The fix</p>
+        <p class="scenario__text">An AI assistant on the city website and phone answers instantly, 24/7.</p>
+      </div>
+      <div class="scenario__arrow" aria-hidden="true">&rarr;</div>
+      <div class="scenario__step scenario__step--result">
+        <p class="scenario__label">The result</p>
+        <p class="scenario__text">&ldquo;Like adding a full-time clerk &mdash; without adding payroll.&rdquo;</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="scenario-header">
+      <span class="scenario-icon" aria-hidden="true">&#128680;</span>
+      <h1 class="slide__title">Walker County Sheriff&rsquo;s Department</h1>
+    </div>
+    <div class="scenario">
+      <div class="scenario__step">
+        <p class="scenario__label">The problem</p>
+        <p class="scenario__text">Deputies spend hours writing reports instead of patrolling.</p>
+      </div>
+      <div class="scenario__arrow" aria-hidden="true">&rarr;</div>
+      <div class="scenario__step">
+        <p class="scenario__label">The fix</p>
+        <p class="scenario__text">AI drafts incident reports straight from their notes and dictation.</p>
+      </div>
+      <div class="scenario__arrow" aria-hidden="true">&rarr;</div>
+      <div class="scenario__step scenario__step--result">
+        <p class="scenario__label">The result</p>
+        <p class="scenario__text">&ldquo;Hours of paperwork back every shift &mdash; more deputies on the street, not behind a desk.&rdquo;</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="scenario-header">
+      <span class="scenario-icon" aria-hidden="true">&#129309;</span>
+      <h1 class="slide__title">Local Non-Profit</h1>
+    </div>
+    <div class="scenario">
+      <div class="scenario__step">
+        <p class="scenario__label">The problem</p>
+        <p class="scenario__text">A two-person team, a big mission, and no time left for outreach or grants.</p>
+      </div>
+      <div class="scenario__arrow" aria-hidden="true">&rarr;</div>
+      <div class="scenario__step">
+        <p class="scenario__label">The fix</p>
+        <p class="scenario__text">AI drafts newsletters, social posts, and first-pass grant applications.</p>
+      </div>
+      <div class="scenario__arrow" aria-hidden="true">&rarr;</div>
+      <div class="scenario__step scenario__step--result">
+        <p class="scenario__label">The result</p>
+        <p class="scenario__text">&ldquo;The reach of a 10-person team with the staff of two.&rdquo;</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="scenario-header">
+      <span class="scenario-icon" aria-hidden="true">&#128085;</span>
+      <h1 class="slide__title">The Clothing Store on the Square</h1>
+    </div>
+    <div class="scenario">
+      <div class="scenario__step">
+        <p class="scenario__label">The problem</p>
+        <p class="scenario__text">The owner can&rsquo;t keep up with posting, promos, and product descriptions.</p>
+      </div>
+      <div class="scenario__arrow" aria-hidden="true">&rarr;</div>
+      <div class="scenario__step">
+        <p class="scenario__label">The fix</p>
+        <p class="scenario__text">AI writes a week of social posts and product copy in minutes.</p>
+      </div>
+      <div class="scenario__arrow" aria-hidden="true">&rarr;</div>
+      <div class="scenario__step scenario__step--result">
+        <p class="scenario__label">The result</p>
+        <p class="scenario__text">&ldquo;Consistent marketing without hiring an agency &mdash; and foot traffic follows.&rdquo;</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="scenario-header">
+      <span class="scenario-icon" aria-hidden="true">&#128203;</span>
+      <h1 class="slide__title">The Insurance Office</h1>
+    </div>
+    <div class="scenario">
+      <div class="scenario__step">
+        <p class="scenario__label">The problem</p>
+        <p class="scenario__text">Agents are buried in admin, quotes, and follow-ups.</p>
+      </div>
+      <div class="scenario__arrow" aria-hidden="true">&rarr;</div>
+      <div class="scenario__step">
+        <p class="scenario__label">The fix</p>
+        <p class="scenario__text">AI handles first-draft emails, summaries, and reminders.</p>
+      </div>
+      <div class="scenario__arrow" aria-hidden="true">&rarr;</div>
+      <div class="scenario__step scenario__step--result">
+        <p class="scenario__label">The result</p>
+        <p class="scenario__text">&ldquo;Agents back to selling and serving clients &mdash; not shuffling paper.&rdquo;</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="scenario-header">
+      <span class="scenario-icon" aria-hidden="true">&#128295;</span>
+      <h1 class="slide__title">The HVAC Contractor</h1>
+    </div>
+    <div class="scenario">
+      <div class="scenario__step">
+        <p class="scenario__label">The problem</p>
+        <p class="scenario__text">After-hours calls go to voicemail, and the lead calls the next company.</p>
+      </div>
+      <div class="scenario__arrow" aria-hidden="true">&rarr;</div>
+      <div class="scenario__step">
+        <p class="scenario__label">The fix</p>
+        <p class="scenario__text">AI answers, books, and texts back instantly, day or night.</p>
+      </div>
+      <div class="scenario__arrow" aria-hidden="true">&rarr;</div>
+      <div class="scenario__step scenario__step--result">
+        <p class="scenario__label">The result</p>
+        <p class="scenario__text">&ldquo;Not one more job lost to a missed call.&rdquo;</p>
+      </div>
+    </div>
   </section>
 
   <div class="deck-counter">1 / 5</div>
