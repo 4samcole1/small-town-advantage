@@ -217,6 +217,40 @@
     font-size: clamp(1.4rem, 2.2vw, 2.1rem);
     flex-shrink: 0;
   }
+
+  /* Chain component (slide 12) */
+  .chain {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-top: 2rem;
+  }
+
+  .chain__pill {
+    background: var(--surface);
+    border: 1px solid var(--soft-border);
+    border-radius: 999px;
+    padding: 1rem 1.75rem;
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: clamp(1rem, 1.7vw, 1.4rem);
+    color: var(--text-neutral);
+    white-space: nowrap;
+  }
+
+  .chain__pill--accent {
+    background: var(--surface-elevated);
+    border-color: var(--gold);
+    color: var(--gold);
+    box-shadow: 0 0 0 1px var(--gold), 0 20px 45px var(--teal-glow);
+  }
+
+  .chain__arrow {
+    color: var(--gold);
+    font-size: clamp(1.2rem, 2vw, 1.8rem);
+    flex-shrink: 0;
+  }
 </style>
 </head>
 <body>
@@ -403,6 +437,53 @@
         <p class="scenario__text">&ldquo;Not one more job lost to a missed call.&rdquo;</p>
       </div>
     </div>
+  </section>
+
+  <section class="slide">
+    <p class="slide__eyebrow">What happens next</p>
+    <h1 class="slide__title">The hours come back. Then the margins. Then the people.</h1>
+    <div class="chain">
+      <div class="chain__pill">Reclaimed hours</div>
+      <div class="chain__arrow" aria-hidden="true">&rarr;</div>
+      <div class="chain__pill">Healthier margins</div>
+      <div class="chain__arrow" aria-hidden="true">&rarr;</div>
+      <div class="chain__pill chain__pill--accent">Hire real people</div>
+      <div class="chain__arrow" aria-hidden="true">&rarr;</div>
+      <div class="chain__pill">The business scales</div>
+    </div>
+    <p class="slide__body">AI doesn&rsquo;t cut the jobs. It funds them.</p>
+  </section>
+
+  <section class="slide">
+    <p class="slide__eyebrow">The turnaround</p>
+    <h1 class="slide__title">Now watch the same business&hellip; survive.</h1>
+    <div class="stat-row">
+      <div class="stat stat--teal">
+        <div class="stat__number">&#10003;</div>
+        <div class="stat__label">survives</div>
+      </div>
+      <div class="stat stat--teal">
+        <div class="stat__number">&#10003;</div>
+        <div class="stat__label">grows</div>
+      </div>
+      <div class="stat stat--teal">
+        <div class="stat__number">&#10003;</div>
+        <div class="stat__label">hires</div>
+      </div>
+    </div>
+    <p class="slide__body">Same owner. Same town. Different ending.</p>
+  </section>
+
+  <section class="slide">
+    <p class="slide__eyebrow">Why this matters for Jasper</p>
+    <h1 class="slide__title">When Main Street rises, the whole town rises.</h1>
+    <p class="slide__body">Every business and every public office doing this means more local jobs, money that stays in Walker County, better services, and a town that competes with anybody.</p>
+  </section>
+
+  <section class="slide slide--center">
+    <p class="slide__eyebrow">The honest part</p>
+    <h1 class="slide__title">AI doesn&rsquo;t replace people. It replaces the tasks nobody has time for.</h1>
+    <p class="slide__body">The human work &mdash; the handshake, the craft, the care &mdash; is exactly what this frees you to do more of.</p>
   </section>
 
   <div class="deck-counter">1 / 5</div>
