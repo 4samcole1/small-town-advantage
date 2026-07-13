@@ -358,6 +358,122 @@
     font-style: italic;
     font-weight: 400;
   }
+
+  /* Live demo slide (slide 12) */
+  .slide--demo .slide__title {
+    font-size: clamp(2rem, 4vw, 3.4rem);
+  }
+
+  .demo-form {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+    width: 100%;
+    max-width: 720px;
+  }
+
+  #demo-input {
+    flex: 1;
+    min-width: 0;
+    background: var(--surface);
+    border: 1px solid var(--soft-border);
+    border-radius: 12px;
+    padding: 1rem 1.25rem;
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size: clamp(1rem, 1.6vw, 1.25rem);
+  }
+
+  #demo-input::placeholder { color: var(--text-muted); }
+
+  #demo-input:focus {
+    outline: none;
+    border-color: var(--teal);
+    box-shadow: 0 0 0 1px var(--teal);
+  }
+
+  #demo-go {
+    flex-shrink: 0;
+    background: var(--teal);
+    color: var(--deep-bg);
+    border: none;
+    border-radius: 12px;
+    padding: 1rem 1.75rem;
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: clamp(1rem, 1.6vw, 1.25rem);
+    cursor: pointer;
+    transition: background 150ms ease, transform 150ms ease;
+  }
+
+  #demo-go:hover { background: var(--teal-accent); }
+
+  #demo-go:disabled {
+    opacity: .6;
+    cursor: default;
+    transform: none;
+  }
+
+  .demo-grid {
+    display: flex;
+    gap: 1.5rem;
+    width: 100%;
+    margin-top: 2.5rem;
+    align-items: stretch;
+  }
+
+  .demo-out {
+    flex: 1;
+    min-width: 0;
+    background: var(--surface);
+    border: 1px solid var(--soft-border);
+    border-radius: 16px;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: .85rem;
+  }
+
+  .demo-out__label {
+    color: var(--teal);
+    text-transform: uppercase;
+    letter-spacing: .1em;
+    font-weight: 600;
+    font-size: clamp(.75rem, 1vw, .9rem);
+  }
+
+  .demo-stream {
+    color: var(--text-neutral);
+    font-size: clamp(.85rem, 1.15vw, 1.05rem);
+    line-height: 1.5;
+    white-space: pre-wrap;
+    min-height: 8rem;
+    max-height: 26vh;
+    overflow-y: auto;
+  }
+
+  .demo-stream.ai-thinking {
+    color: var(--text-muted);
+    font-style: italic;
+    animation: demo-pulse 1.1s ease-in-out infinite;
+  }
+
+  @keyframes demo-pulse {
+    0%, 100% { opacity: .55; }
+    50% { opacity: 1; }
+  }
+
+  .typing::after {
+    content: '|';
+    color: var(--teal);
+    animation: demo-caret-blink 0.9s step-end infinite;
+    margin-left: 1px;
+  }
+
+  @keyframes demo-caret-blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+  }
 </style>
 </head>
 <body>
@@ -550,6 +666,29 @@
     </div>
   </section>
 
+  <section class="slide slide--demo">
+    <p class="slide__eyebrow">Live &mdash; right now</p>
+    <h1 class="slide__title">Name a business. Any business in this room.</h1>
+    <div class="demo-form">
+      <input type="text" id="demo-input" placeholder="e.g. Joe's Barbecue" autocomplete="off">
+      <button type="button" id="demo-go">Watch AI go &rarr;</button>
+    </div>
+    <div class="demo-grid">
+      <div class="demo-out">
+        <p class="demo-out__label">This week&rsquo;s social posts</p>
+        <div class="demo-stream" id="demo-social"></div>
+      </div>
+      <div class="demo-out">
+        <p class="demo-out__label">Reply to a bad review</p>
+        <div class="demo-stream" id="demo-review"></div>
+      </div>
+      <div class="demo-out">
+        <p class="demo-out__label">After-hours text back</p>
+        <div class="demo-stream" id="demo-sms"></div>
+      </div>
+    </div>
+  </section>
+
   <section class="slide">
     <p class="slide__eyebrow">What happens next</p>
     <h1 class="slide__title">The hours come back. Then the margins. Then the people.</h1>
@@ -712,6 +851,65 @@
       }
     }
 
+    // Live demo slide: type a business name, stream 3 real deliverables.
+    (function wireDemo() {
+      const input = document.getElementById('demo-input');
+      const go = document.getElementById('demo-go');
+      const socialEl = document.getElementById('demo-social');
+      const reviewEl = document.getElementById('demo-review');
+      const smsEl = document.getElementById('demo-sms');
+      if (!go || !input) return;
+
+      const socialFallback =
+        "🔥 Fall-off-the-bone tender, low & slow all night — Joe's Barbecue is fired up and ready for you today.\n" +
+        "🍖 Big trays, bigger flavor. Grab the crew and swing by Joe's Barbecue this weekend — first come, first served.\n" +
+        "🎉 New batch of brisket just hit the smoker. Come get it before it's gone — Joe's Barbecue, open till 8!";
+
+      const reviewFallback =
+        "Thank you for taking the time to share this — I'm sorry to hear your visit didn't live up to what you should expect from us. " +
+        "That's not the experience we want for anyone who walks through our door, and I'd genuinely like to make it right. " +
+        "Please reach out directly so we can hear more about what happened. " +
+        "We appreciate you giving Joe's Barbecue a try and hope for the chance to welcome you back soon.";
+
+      const smsFallback =
+        "Thanks for reaching out to Joe's Barbecue! We're closed for the night but read every message first thing in the morning and will get right back to you.";
+
+      async function runDemo() {
+        const name = input.value.trim() || "Joe's Barbecue";
+        go.disabled = true;
+        const originalLabel = go.textContent;
+        go.textContent = 'Working…';
+
+        try {
+          await Promise.all([
+            runAIBeat(socialEl, {
+              messages: [{ role: 'user', content: name }],
+              system: "You are a friendly small-business marketing assistant. Write 3 short, punchy, ready-to-post social media captions (each with a relevant emoji) for the business named by the user. No preamble — just the 3 captions, one per line.",
+              fallbackText: socialFallback,
+            }),
+            runAIBeat(reviewEl, {
+              messages: [{ role: 'user', content: name }],
+              system: "Write a calm, professional, warm reply to a hypothetical 1-star Google review for the named local business. 3-4 sentences. No preamble.",
+              fallbackText: reviewFallback,
+            }),
+            runAIBeat(smsEl, {
+              messages: [{ role: 'user', content: name }],
+              system: "Write a short, warm after-hours text-message auto-reply from the named local business to a customer who messaged after closing. 2 sentences. No preamble.",
+              fallbackText: smsFallback,
+            }),
+          ]);
+        } finally {
+          go.disabled = false;
+          go.textContent = originalLabel;
+        }
+      }
+
+      go.addEventListener('click', runDemo);
+      input.addEventListener('keydown', e => {
+        if (e.key === 'Enter') { e.preventDefault(); runDemo(); }
+      });
+    })();
+
     // Capture original headline text up front (data-text is already present
     // statically in the HTML so the copy is fully intact if JS never runs;
     // this is a fallback for any data-typewriter element that omits it) so
@@ -744,12 +942,14 @@
       else document.exitFullscreen();
     }
     document.addEventListener('keydown', e => {
+      const tag = (e.target.tagName || '').toLowerCase();
+      if (tag === 'input' || tag === 'textarea') return; // let the demo input receive keys
       if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); next(); }
       else if (e.key === 'ArrowLeft') { prev(); }
       else if (e.key.toLowerCase() === 'f') { toggleFullscreen(); }
     });
     document.addEventListener('click', e => {
-      if (e.target.closest('a')) return;
+      if (e.target.closest('a, button, input, textarea')) return;
       (e.clientX < window.innerWidth / 3) ? prev() : next();
     });
     render();
