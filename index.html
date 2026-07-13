@@ -42,7 +42,16 @@
     overflow: hidden;
   }
 
+  #bg-canvas {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+  }
+
   .slide {
+    position: relative;
+    z-index: 1;
     width: 100vw;
     height: 100vh;
     display: none;
@@ -353,19 +362,21 @@
 </head>
 <body>
 
+  <canvas id="bg-canvas" aria-hidden="true"></canvas>
+
   <div id="deck-progress"><div id="deck-progress-fill"></div></div>
 
   <img class="deck-logo" src="assets/logo-white.png" alt="SC Creative">
 
   <section class="slide active">
     <p class="slide__eyebrow">SC Creative &middot; Rotary Club of Jasper</p>
-    <h1 class="slide__title">The Small-Town Advantage</h1>
+    <h1 class="slide__title" data-typewriter data-text="The Small-Town Advantage">The Small-Town Advantage</h1>
     <div class="title-underline"></div>
     <p class="slide__body">How AI Levels the Playing Field for Jasper.</p>
   </section>
 
   <section class="slide slide--center">
-    <h1 class="slide__title">&ldquo;Isn&rsquo;t AI going to replace us?&rdquo;</h1>
+    <h1 class="slide__title" data-typewriter data-text="&ldquo;Isn&rsquo;t AI going to replace us?&rdquo;">&ldquo;Isn&rsquo;t AI going to replace us?&rdquo;</h1>
     <p class="slide__body">Let&rsquo;s start with the fear everyone in this room already has.</p>
   </section>
 
@@ -701,6 +712,21 @@
       }
     }
 
+    // Capture original headline text up front (data-text is already present
+    // statically in the HTML so the copy is fully intact if JS never runs;
+    // this is a fallback for any data-typewriter element that omits it) so
+    // re-visits never wipe/rescramble the text.
+    document.querySelectorAll('[data-typewriter]').forEach(el => {
+      if (!el.dataset.text) el.dataset.text = el.textContent;
+    });
+
+    function typeActiveHeadlines() {
+      document.querySelectorAll('.slide.active [data-typewriter]:not(.typed)').forEach(el => {
+        el.classList.add('typed');
+        typewriter(el, el.dataset.text);
+      });
+    }
+
     const slides = Array.from(document.querySelectorAll('.slide'));
     let current = 0;
     const counter = document.querySelector('.deck-counter');
@@ -708,6 +734,7 @@
       slides.forEach((s, i) => s.classList.toggle('active', i === current));
       counter.textContent = (current + 1) + ' / ' + slides.length;
       document.getElementById('deck-progress-fill').style.width = ((current + 1) / slides.length * 100) + '%';
+      typeActiveHeadlines();
     }
     function goTo(n) { current = Math.max(0, Math.min(slides.length - 1, n)); render(); }
     function next() { goTo(current + 1); }
@@ -726,6 +753,98 @@
       (e.clientX < window.innerWidth / 3) ? prev() : next();
     });
     render();
+
+    // Ambient generative background: a slowly drifting field of nodes with
+    // faint connecting lines, in brand teal. Kept low-opacity so slide text
+    // always stays legible. Respects prefers-reduced-motion (one static frame).
+    (function ambientBackground() {
+      const canvas = document.getElementById('bg-canvas');
+      if (!canvas || !canvas.getContext) return;
+      const ctx = canvas.getContext('2d');
+      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const TEAL = '28,199,195';
+      const NODE_COUNT = 60;
+      const LINK_DIST = 140;
+      let width, height, dpr;
+      let nodes = [];
+
+      function fit() {
+        dpr = window.devicePixelRatio || 1;
+        width = window.innerWidth;
+        height = window.innerHeight;
+        canvas.width = width * dpr;
+        canvas.height = height * dpr;
+        canvas.style.width = width + 'px';
+        canvas.style.height = height + 'px';
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      }
+
+      function makeNodes() {
+        nodes = Array.from({ length: NODE_COUNT }, () => ({
+          x: Math.random() * width,
+          y: Math.random() * height,
+          vx: (Math.random() - 0.5) * 0.18,
+          vy: (Math.random() - 0.5) * 0.18,
+          r: 1 + Math.random() * 1.6,
+        }));
+      }
+
+      function drawFrame() {
+        ctx.clearRect(0, 0, width, height);
+
+        // connecting lines between nearby nodes
+        for (let i = 0; i < nodes.length; i++) {
+          for (let j = i + 1; j < nodes.length; j++) {
+            const a = nodes[i], b = nodes[j];
+            const dx = a.x - b.x, dy = a.y - b.y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist < LINK_DIST) {
+              const alpha = (1 - dist / LINK_DIST) * 0.15;
+              ctx.strokeStyle = `rgba(${TEAL},${alpha})`;
+              ctx.lineWidth = 1;
+              ctx.beginPath();
+              ctx.moveTo(a.x, a.y);
+              ctx.lineTo(b.x, b.y);
+              ctx.stroke();
+            }
+          }
+        }
+
+        // nodes
+        for (const n of nodes) {
+          ctx.fillStyle = `rgba(${TEAL},0.22)`;
+          ctx.beginPath();
+          ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+
+      function step() {
+        for (const n of nodes) {
+          n.x += n.vx;
+          n.y += n.vy;
+          if (n.x < 0 || n.x > width) n.vx *= -1;
+          if (n.y < 0 || n.y > height) n.vy *= -1;
+        }
+        drawFrame();
+        raf = requestAnimationFrame(step);
+      }
+
+      let raf = null;
+      fit();
+      makeNodes();
+      drawFrame();
+
+      if (!reduceMotion) {
+        raf = requestAnimationFrame(step);
+      }
+
+      window.addEventListener('resize', () => {
+        fit();
+        makeNodes();
+        drawFrame();
+      });
+    })();
   </script>
 
 </body>
