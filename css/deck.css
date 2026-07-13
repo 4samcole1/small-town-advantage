@@ -424,8 +424,23 @@ body::before {
 .ai-btn:hover { transform: translateY(-2px); filter: brightness(1.06); box-shadow: 0 12px 30px rgba(28,199,195,0.4); }
 .ai-btn:disabled { opacity: .55; cursor: default; transform: none; box-shadow: none; }
 
+/* "found it" research line */
+.demo-found {
+  margin-top: 1rem;
+  min-height: 1.4rem;
+  color: var(--teal-bright);
+  font-size: clamp(.82rem, 1.15vw, 1.02rem);
+  line-height: 1.45;
+  font-weight: 500;
+}
+.demo-found:empty::before {
+  content: attr(data-rest);
+  color: var(--text-muted);
+  font-weight: 400; font-style: italic; opacity: .75;
+}
+
 /* demo output grid of three cards */
-.demo-grid { display: flex; gap: 1.15rem; width: 100%; margin-top: 1.4rem; align-items: stretch; }
+.demo-grid { display: flex; gap: 1.15rem; width: 100%; margin-top: 1.2rem; align-items: stretch; }
 .demo-out {
   flex: 1; min-width: 0;
   background: rgba(255,255,255,0.03);

@@ -1,6 +1,18 @@
-// Rename to config.js to enable TRUE LIVE AI on stage.
-// Use a rate-limited / throwaway Anthropic key. Do NOT publish index.html with a real key embedded.
+// Rename this file to config.js to enable TRUE LIVE AI on stage.
+//
+// With a key set, the Live Demo slide actually SEARCHES THE WEB for the
+// business someone names and generates copy grounded in the real business
+// in Walker County, AL. Without a key, the deck runs on pre-authored
+// offline samples (still real AI output — just not a live lookup).
+//
+// Notes:
+//  - Use a rate-limited / throwaway Anthropic key. Do NOT publish index.html
+//    with a real key embedded — anyone who opens the file can read it.
+//  - The default model (claude-sonnet-5) supports web search. A couple of
+//    seconds slower than Haiku, but it can actually look businesses up.
+//  - Each live lookup costs roughly a penny (one web search + a little text).
+
 window.AI_CONFIG = {
-  apiKey: "sk-ant-...", // your Anthropic API key
-  model:  "claude-haiku-4-5", // fastest for live stage use; swap to claude-sonnet-5 for more polish
+  apiKey: "sk-ant-...",       // your Anthropic API key
+  model:  "claude-sonnet-5",  // web-search capable; swap to claude-opus-4-8 for max quality
 };

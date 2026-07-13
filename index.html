@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/deck.css">
-<script>window.AI_CONFIG = window.AI_CONFIG || { apiKey: "", model: "claude-haiku-4-5" };</script>
+<script>window.AI_CONFIG = window.AI_CONFIG || { apiKey: "", model: "claude-sonnet-5" };</script>
 <script src="config.js" onerror="/* no config.js — fallback mode */"></script>
 </head>
 <body>
@@ -179,9 +179,10 @@
       </div>
       <div class="ai-window__body">
         <div class="ai-field">
-          <input type="text" id="demo-input" class="ai-input" placeholder="e.g. Joe's Barbecue" autocomplete="off">
+          <input type="text" id="demo-input" class="ai-input" placeholder="Name a real Walker County business&hellip;" autocomplete="off">
           <button type="button" id="demo-go" class="ai-btn">Watch AI go &rarr;</button>
         </div>
+        <div class="demo-found" id="demo-found" data-rest="Enter a business name &mdash; AI will look it up live in Walker County."></div>
         <div class="demo-grid">
           <div class="demo-out">
             <p class="demo-out__label"><span>&#128241;</span> This week&rsquo;s social posts</p>
