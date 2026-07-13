@@ -87,20 +87,44 @@
         "🔎 Offline sample for “" + name + ".” Add an API key in config.js for a real, live Walker County lookup.",
     });
 
+    // Reveal pre-authored text with the same "searching → thinking → type"
+    // rhythm as a live call, so curated and live results feel identical.
+    async function reveal(el, text, thinkingLabel) {
+      el.classList.add('ai-thinking');
+      el.textContent = thinkingLabel || 'Thinking…';
+      await new Promise(r => setTimeout(r, 550 + Math.random() * 400));
+      el.classList.remove('ai-thinking');
+      await typewriter(el, text, { speed: 10 });
+    }
+
     async function runDemo() {
       const name = input.value.trim() || 'a local business';
       go.disabled = true;
       const label = go.innerHTML;
       go.textContent = 'Working…';
-      const F = fb(name);
 
       try {
-        // 1) Research the real business (web search) — the "it actually looked them up" beat.
-        let profile = '';
+        // Searching beat (always shown — sells the "live lookup" moment).
         if (foundEl) {
           foundEl.classList.add('ai-thinking');
           foundEl.textContent = '🔎 Looking up ' + name + ' in Walker County…';
         }
+
+        // 1) Curated real business? Use the researched content (offline, reliable).
+        const biz = window.matchLocalBusiness ? window.matchLocalBusiness(name) : null;
+        if (biz) {
+          if (foundEl) { foundEl.classList.remove('ai-thinking'); await typewriter(foundEl, '🔎 ' + biz.found, { speed: 8 }); }
+          await Promise.all([
+            reveal(socialEl, biz.social, 'Writing posts…'),
+            reveal(reviewEl, biz.review, 'Drafting reply…'),
+            reveal(smsEl, biz.sms, 'Composing text…'),
+          ]);
+          return;
+        }
+
+        // 2) Not in the curated set — do a genuine live web lookup if a key is set.
+        const F = fb(name);
+        let profile = '';
         try {
           profile = await aiComplete([{ role: 'user', content: name }], {
             system: RESEARCH_SYS,
@@ -111,12 +135,7 @@
           profile = '';
           if (foundEl) { foundEl.classList.remove('ai-thinking'); await typewriter(foundEl, F.found, { speed: 8 }); }
         }
-
-        // 2) Generate the three deliverables, grounded in the profile when we have one.
-        const ctx = profile
-          ? 'Business name: ' + name + '\nWhat we found: ' + profile
-          : name;
-
+        const ctx = profile ? 'Business name: ' + name + '\nWhat we found: ' + profile : name;
         await Promise.all([
           runAIBeat(socialEl, { messages: [{ role: 'user', content: ctx }], system: SOCIAL_SYS, fallbackText: F.social }),
           runAIBeat(reviewEl, { messages: [{ role: 'user', content: ctx }], system: REVIEW_SYS, fallbackText: F.review }),
