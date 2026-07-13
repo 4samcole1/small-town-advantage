@@ -116,7 +116,64 @@ are carried by the same examples.
 - Unmistakably SC Creative brand.
 - Sam can tweak wording by editing plain text in the file.
 
+## AI Showcase Layer (the "this IS AI" upgrade)
+
+The deck must not merely *describe* AI — it must **be** a live demonstration of it, so Sam
+can point at the screen and say "this is AI, right now." Four additions layer on top of the
+16-slide structure without changing the narrative arc.
+
+**Goal reframed:** the deck itself is the strongest proof point in the room. Wow first,
+inspire second.
+
+### 1. The Live Demo slide (hero / mic-drop)
+
+A dedicated slide near the payoff section: *"Name a business. Any business in this room."*
+Sam types what the audience shouts (e.g. "Joe's Barbecue") into an input and hits go. The
+screen **streams out, live, word-by-word**: (a) three ready-to-post social captions, (b) a
+calm reply to a nasty Google review, (c) an instant after-hours text-back to a customer.
+Then his line: *"That took nine seconds. That's AI. Every business in this room can do that."*
+
+- **Live mode (when an API key is present):** streams a real Claude completion via
+  `fetch` to `https://api.anthropic.com/v1/messages`, `stream: true`, headers
+  `x-api-key`, `anthropic-version: 2023-06-01`, `anthropic-dangerous-direct-browser-access: true`.
+  Default model `claude-haiku-4-5` (lowest latency for stage use; one-line configurable).
+- **Fallback mode (no key / offline / API error):** plays a **real, pre-authored Claude
+  output** (bundled in the file) through the *same* streaming typewriter animation, so the
+  beat never fails and is still honestly "AI output."
+- The two modes are indistinguishable to the audience; the deck auto-selects at runtime.
+
+### 2. Live "Ask the City of Jasper AI assistant" beat (second interactive punch)
+
+On the City of Jasper scenario slide, a small chat box: Sam types a citizen question
+("When's my trash picked up?") and it answers live. Same live/fallback architecture and a
+short system prompt casting it as the city's assistant.
+
+### 3. Ambient "alive" background
+
+A subtle, slow generative **canvas animation** (drifting particle / neural-network field in
+brand teal) behind every slide — pure JS, offline, low-opacity so text stays razor-legible.
+Makes the whole deck *feel* intelligent, not static. Respects `prefers-reduced-motion`.
+
+### 4. Self-typing text
+
+Key headlines and all AI outputs type themselves in with a cursor, reinforcing "something is
+thinking here." A shared typewriter utility drives both the scripted headlines and the live
+stream.
+
+### AI-layer technical constraints
+
+- **Key handling:** the API key is read from a separate `config.js` (git-ignored, never
+  committed). If absent, the deck runs in fallback mode. `config.js.example` documents the
+  shape. Sam is advised to use a rate-limited/throwaway key and not to publish the raw file.
+- **Still offline-first:** with no key and no internet, the entire deck — including both
+  interactive beats — runs flawlessly on pre-authored content. Live mode is a pure upgrade.
+- **Graceful failure:** any network/API error during a live beat silently falls back to the
+  pre-authored stream mid-beat; the show never visibly breaks.
+- **Latency UX:** a "thinking…" indicator shows while a live call is in flight; streaming
+  begins as tokens arrive.
+
 ## Open questions / deferred
 
-- Exact "3 things to try Monday" (slide 14) — to be drafted during build.
+- Exact "3 things to try Monday" (slide 16) — drafted during build.
 - Sam's contact details for the closing slide — to confirm before final.
+- Whether Sam supplies an API key for true-live mode (deck ships working without one).

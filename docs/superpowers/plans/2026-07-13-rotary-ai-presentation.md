@@ -259,6 +259,239 @@ cd ~/"Ai Sites/rotary-ai-presentation" && git add -A && git commit -m "feat: pol
 
 ---
 
+## AI Showcase Layer
+
+These tasks add the "this IS AI" layer on top of the finished 18-slide deck. New Global
+Constraint for all AI-layer tasks: **the deck must still run flawlessly with no `config.js`
+and no internet** — live mode is a pure upgrade, and every live beat falls back to
+pre-authored real Claude output through the same animation.
+
+### Task 7: AI engine — config, streaming client, typewriter, fallback
+
+**Files:**
+- Create: `config.js.example`
+- Modify: `.gitignore` (add `config.js`)
+- Modify: `index.html` (add the AI engine `<script>` block + a `<script src="config.js">` optional include)
+
+**Interfaces:**
+- Produces:
+  - global `AI_CONFIG` (from `config.js` if present, else a safe default `{apiKey: "", model: "claude-haiku-4-5"}`)
+  - `typewriter(el, text, {speed, cursor})` → Promise that types `text` into `el` char-by-char
+  - `aiStream(messages, {system, onToken})` → async fn that, when `AI_CONFIG.apiKey` is set, streams a real Claude completion token-by-token via `onToken`; otherwise rejects so callers use fallback
+  - `runAIBeat(el, {messages, system, fallbackText})` → orchestrates: show "thinking…", try `aiStream` live, and on any failure/no-key type out `fallbackText` via `typewriter`. Always resolves.
+
+- [ ] **Step 1: Add `config.js.example` and gitignore `config.js`**
+
+`config.js.example`:
+```javascript
+// Rename to config.js to enable TRUE LIVE AI on stage.
+// Use a rate-limited / throwaway Anthropic key. Do NOT publish index.html with a real key embedded.
+window.AI_CONFIG = {
+  apiKey: "sk-ant-...", // your Anthropic API key
+  model:  "claude-haiku-4-5", // fastest for live stage use; swap to claude-sonnet-5 for more polish
+};
+```
+Append `config.js` to `.gitignore`.
+
+- [ ] **Step 2: Add the optional config include in `index.html` `<head>` (after the fonts)**
+
+```html
+<script>window.AI_CONFIG = window.AI_CONFIG || { apiKey: "", model: "claude-haiku-4-5" };</script>
+<script src="config.js" onerror="/* no config.js — fallback mode */"></script>
+```
+(The inline default runs first; if `config.js` exists it overwrites `window.AI_CONFIG`.)
+
+- [ ] **Step 3: Add the AI engine to the inline `<script>` (before the slide engine)**
+
+```javascript
+const AI = (window.AI_CONFIG || { apiKey: "", model: "claude-haiku-4-5" });
+
+// Type `text` into `el` one character at a time. Returns a Promise.
+function typewriter(el, text, opts = {}) {
+  const speed = opts.speed ?? 18;               // ms per char
+  el.classList.add('typing');
+  el.textContent = '';
+  return new Promise(resolve => {
+    let i = 0;
+    (function tick() {
+      if (i >= text.length) { el.classList.remove('typing'); return resolve(); }
+      el.textContent += text[i++];
+      setTimeout(tick, speed);
+    })();
+  });
+}
+
+// Live streaming call to Claude. Rejects if no key so callers can fall back.
+async function aiStream(messages, { system, onToken } = {}) {
+  if (!AI.apiKey) throw new Error('no-key');
+  const res = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json',
+      'x-api-key': AI.apiKey,
+      'anthropic-version': '2023-06-01',
+      'anthropic-dangerous-direct-browser-access': 'true',
+    },
+    body: JSON.stringify({
+      model: AI.model || 'claude-haiku-4-5',
+      max_tokens: 1024,
+      stream: true,
+      system: system || undefined,
+      messages,
+    }),
+  });
+  if (!res.ok || !res.body) throw new Error('api-' + res.status);
+  const reader = res.body.getReader();
+  const decoder = new TextDecoder();
+  let buf = '';
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    buf += decoder.decode(value, { stream: true });
+    const lines = buf.split('\n');
+    buf = lines.pop();
+    for (const line of lines) {
+      if (!line.startsWith('data:')) continue;
+      const data = line.slice(5).trim();
+      if (!data || data === '[DONE]') continue;
+      try {
+        const evt = JSON.parse(data);
+        if (evt.type === 'content_block_delta' && evt.delta?.type === 'text_delta') {
+          onToken?.(evt.delta.text);
+        }
+      } catch (_) { /* ignore partial */ }
+    }
+  }
+}
+
+// Orchestrate one AI beat: live when possible, real-cached fallback otherwise.
+async function runAIBeat(el, { messages, system, fallbackText }) {
+  el.classList.add('ai-thinking');
+  el.textContent = 'Thinking…';
+  try {
+    let first = true;
+    await aiStream(messages, {
+      system,
+      onToken: t => { if (first) { el.textContent = ''; el.classList.remove('ai-thinking'); first = false; } el.textContent += t; },
+    });
+    el.classList.remove('ai-thinking');
+  } catch (_) {
+    el.classList.remove('ai-thinking');
+    await new Promise(r => setTimeout(r, 500)); // brief "thinking" beat
+    await typewriter(el, fallbackText, { speed: 12 });
+  }
+}
+```
+
+- [ ] **Step 4: Verify**
+
+Open `index.html` (no `config.js`). Expected: page still loads, no console errors, `typeof runAIBeat === 'function'`. Grep-confirm the three functions exist and `anthropic-dangerous-direct-browser-access` is present. `config.js` is gitignored (`git status` must not list it if created).
+
+- [ ] **Step 5: Commit**
+```bash
+cd ~/"Ai Sites/rotary-ai-presentation" && git add -A && git commit -m "feat: AI engine — streaming client, typewriter, real-cached fallback"
+```
+
+---
+
+### Task 8: Ambient generative background + self-typing headlines
+
+**Files:**
+- Modify: `index.html` (canvas element, canvas animation script, hook typewriter into title slides)
+
+**Interfaces:**
+- Consumes: `typewriter` (Task 7), the slide engine's `render()` (Task 1/6).
+- Produces: a full-viewport `<canvas id="bg-canvas">` behind all slides; a `data-typewriter` attribute convention that makes flagged headlines self-type when their slide activates.
+
+- [ ] **Step 1: Add the canvas + CSS**
+
+Add `<canvas id="bg-canvas" aria-hidden="true"></canvas>` as the first element in `<body>`. CSS: `position:fixed; inset:0; z-index:0; pointer-events:none;` and ensure `.slide { position:relative; z-index:1; }` so slides sit above it.
+
+- [ ] **Step 2: Add the particle/neural-net animation script**
+
+A lightweight canvas animation: ~60 slowly drifting nodes in `rgba(28,199,195,…)` (brand teal) with faint lines between nearby nodes. Cap opacity low (~0.25) so text stays legible. Wrap the whole animation in a `prefers-reduced-motion` check — if reduced motion is requested, draw one static frame and stop. Handle window resize. Use `requestAnimationFrame`. Keep nodes/lines subtle.
+
+- [ ] **Step 3: Self-typing headlines**
+
+Add support so any element with `data-typewriter` types its text when its slide becomes active. In `render()`, after toggling `.active`, find `.slide.active [data-typewriter]:not(.typed)` and call `typewriter(el, el.dataset.text || el.textContent)` then mark `.typed` (store original text in `data-text` up front so re-visits don't re-scramble). Apply `data-typewriter` to the **title slide** headline and the **fear-hook** headline only (over-using it slows the talk).
+
+- [ ] **Step 4: Verify**
+
+Reload. Expected: subtle animated teal field behind slides; text fully legible; title + fear-hook headlines type themselves in on first view; re-visiting a slide doesn't wipe its text; reduced-motion setting freezes the background. No console errors.
+
+- [ ] **Step 5: Commit**
+```bash
+cd ~/"Ai Sites/rotary-ai-presentation" && git add -A && git commit -m "feat: ambient generative background + self-typing headlines"
+```
+
+---
+
+### Task 9: The Live Demo hero slide (marketing generator)
+
+**Files:**
+- Modify: `index.html` (insert a new slide + its wiring)
+
+**Interfaces:**
+- Consumes: `runAIBeat` (Task 7).
+- Produces: a new `.slide` placed right BEFORE slide 12 ("The turning point") so it lands at the payoff. Note: this shifts later slide numbers by one (deck becomes 19 slides — acceptable; the counter auto-updates).
+
+- [ ] **Step 1: Author the Live Demo slide**
+
+Insert a `<section class="slide slide--demo">` with: eyebrow "Live — right now"; title "Name a business. Any business in this room."; a form row with a text `<input id="demo-input" placeholder="e.g. Joe's Barbecue">` and a `<button id="demo-go">Watch AI go →</button>`; and an output area with three labeled cards (`.demo-out` blocks): "This week's social posts", "Reply to a bad review", "After-hours text back". Each card has an inner `<div class="demo-stream">` target.
+
+- [ ] **Step 2: Wire the demo**
+
+On `#demo-go` click (and Enter in the input), read the business name (default "Joe's Barbecue" if blank), then for each of the three cards call `runAIBeat(streamEl, {...})`:
+- Social: system "You are a friendly small-business marketing assistant. Write 3 short, punchy, ready-to-post social media captions (with a relevant emoji each) for the business named by the user. No preamble — just the 3 captions." ; messages `[{role:'user', content: businessName}]`.
+- Review reply: system "Write a calm, professional, warm reply to a hypothetical 1-star Google review for the named local business. 3-4 sentences. No preamble." ; message = businessName.
+- SMS: system "Write a short, warm after-hours text message auto-reply from the named local business to a customer who just messaged after closing. 2 sentences. No preamble." ; message = businessName.
+
+Each card also has a hand-written **`fallbackText`** — real, on-brand example output for "Joe's Barbecue" — so with no key it still streams believable content. (Write these fallbacks in the file; make them genuinely good.)
+
+Run the three beats concurrently (`Promise.all`) so the whole thing lands in seconds. Disable the button while running; re-enable after.
+
+- [ ] **Step 3: Verify**
+
+Reload; navigate to the demo slide. With no key: clicking "Watch AI go" streams the three fallback outputs with the thinking→typewriter effect. Input + Enter works. Layout fits 16:9, legible. No console errors. (If a test key is placed in `config.js`, confirm it streams live instead — but do not commit `config.js`.)
+
+- [ ] **Step 4: Commit**
+```bash
+cd ~/"Ai Sites/rotary-ai-presentation" && git add -A && git commit -m "feat: live AI demo slide (marketing generator)"
+```
+
+---
+
+### Task 10: City of Jasper live assistant + final dress rehearsal
+
+**Files:**
+- Modify: `index.html` (add the mini-chat to the City of Jasper scenario slide; final checks)
+
+**Interfaces:**
+- Consumes: `runAIBeat` (Task 7).
+- Produces: an "Ask the city's AI assistant" chat box on the City of Jasper slide.
+
+- [ ] **Step 1: Add the chat box to the City of Jasper slide**
+
+Below the scenario cards on the City of Jasper slide, add a compact chat: a text `<input id="city-input" placeholder="Ask the city's AI assistant…">`, a `<button id="city-go">Ask</button>`, and a `<div class="city-answer">` stream target. Keep it small so it doesn't crowd the slide.
+
+- [ ] **Step 2: Wire it**
+
+On ask (click or Enter), call `runAIBeat(answerEl, {system, messages, fallbackText})`:
+- system: "You are the friendly AI assistant for the City of Jasper, Alabama. Answer citizen questions helpfully and briefly (2-3 sentences), in a warm municipal tone. If you don't know a specific local detail, give a helpful general answer and point them to city hall."
+- messages: `[{role:'user', content: question}]` (default question "When is my trash picked up?" if blank).
+- `fallbackText`: a real, warm sample answer about trash pickup that reads as if the city assistant wrote it.
+
+- [ ] **Step 3: Final full dress rehearsal**
+
+Reload with no `config.js`, Wi-Fi off. Click through ALL slides start to finish in fullscreen. Confirm: ambient background animates; headlines self-type; the Live Demo slide streams all three fallbacks; the City assistant answers from fallback; nothing errors; nothing depends on the network. Then resize to 16:9 / 16:10 / 4:3 and confirm legibility. Fix anything that breaks.
+
+- [ ] **Step 4: Commit**
+```bash
+cd ~/"Ai Sites/rotary-ai-presentation" && git add -A && git commit -m "feat: City of Jasper live assistant + final AI-layer dress rehearsal"
+```
+
+---
+
 ## Self-Review
 
 **Spec coverage:** All 18 spec slides map to tasks (1–5 → Task 2; 6–11 → Task 3; 12–15 → Task 4; 16–18 → Task 5; engine/brand/offline → Tasks 1 & 6). Goals inspiration + economy carried by scenario span and slides 14/17. Brand tokens, offline-first, nav, legibility all covered in Global Constraints + tasks.
