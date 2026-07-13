@@ -1,0 +1,6 @@
+// Rename to config.js to enable TRUE LIVE AI on stage.
+// Use a rate-limited / throwaway Anthropic key. Do NOT publish index.html with a real key embedded.
+window.AI_CONFIG = {
+  apiKey: "sk-ant-...", // your Anthropic API key
+  model:  "claude-haiku-4-5", // fastest for live stage use; swap to claude-sonnet-5 for more polish
+};
