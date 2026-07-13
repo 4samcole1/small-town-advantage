@@ -107,6 +107,48 @@
 
   .deck-nav--prev { left: 0; }
   .deck-nav--next { right: 0; }
+
+  .slide--center {
+    align-items: center;
+    text-align: center;
+  }
+
+  .title-underline {
+    width: 110px;
+    height: 7px;
+    background: var(--gold);
+    border-radius: 4px;
+    margin-top: 1.5rem;
+  }
+
+  .stat-row {
+    display: flex;
+    gap: 4rem;
+    margin-top: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .stat {
+    flex: 1;
+    text-align: center;
+  }
+
+  .stat__number {
+    font-family: var(--font-heading);
+    font-weight: 800;
+    font-size: clamp(3rem, 7vw, 5.5rem);
+    line-height: 1;
+  }
+
+  .stat--teal .stat__number { color: var(--teal); }
+  .stat--gold .stat__number { color: var(--gold); }
+
+  .stat__label {
+    color: var(--text-muted);
+    font-size: clamp(.9rem, 1.4vw, 1.1rem);
+    margin-top: .75rem;
+    line-height: 1.3;
+  }
 </style>
 </head>
 <body>
@@ -114,12 +156,50 @@
   <img class="deck-logo" src="assets/logo-white.png" alt="SC Creative">
 
   <section class="slide active">
-    <p class="slide__eyebrow">Slide Engine</p>
-    <h1 class="slide__title">Slide engine works</h1>
-    <p class="slide__body">This placeholder slide confirms the scaffold, brand tokens, and navigation engine are wired up correctly.</p>
+    <p class="slide__eyebrow">SC Creative &middot; Rotary Club of Jasper</p>
+    <h1 class="slide__title">The Small-Town Advantage</h1>
+    <div class="title-underline"></div>
+    <p class="slide__body">How AI Levels the Playing Field for Jasper.</p>
   </section>
 
-  <div class="deck-counter">1 / 1</div>
+  <section class="slide slide--center">
+    <h1 class="slide__title">&ldquo;Isn&rsquo;t AI going to replace us?&rdquo;</h1>
+    <p class="slide__body">Let&rsquo;s start with the fear everyone in this room already has.</p>
+  </section>
+
+  <section class="slide">
+    <p class="slide__eyebrow">The reality</p>
+    <h1 class="slide__title">Half are gone by year five.</h1>
+    <div class="stat-row">
+      <div class="stat stat--teal">
+        <div class="stat__number">20%</div>
+        <div class="stat__label">fail within year one</div>
+      </div>
+      <div class="stat stat--gold">
+        <div class="stat__number">50%</div>
+        <div class="stat__label">gone by year five</div>
+      </div>
+      <div class="stat stat--teal">
+        <div class="stat__number">65%</div>
+        <div class="stat__label">gone by year ten</div>
+      </div>
+    </div>
+    <p class="slide__body">Not because the owner wasn&rsquo;t talented. Because they drowned in the busywork and never got to work <em>on</em> the business.</p>
+  </section>
+
+  <section class="slide">
+    <p class="slide__eyebrow">The shift</p>
+    <h1 class="slide__title">For the first time, small can compete with big.</h1>
+    <p class="slide__body">A Walker County shop, a city office, a two-person non-profit can now afford the same leverage as an organization 100&times; its size.</p>
+  </section>
+
+  <section class="slide">
+    <p class="slide__eyebrow">In plain English</p>
+    <h1 class="slide__title">A very smart assistant that never sleeps.</h1>
+    <p class="slide__body">It reads, writes, answers, and organizes &mdash; instantly, around the clock &mdash; so you and your people don&rsquo;t have to.</p>
+  </section>
+
+  <div class="deck-counter">1 / 5</div>
   <div class="deck-nav deck-nav--prev" aria-hidden="true"></div>
   <div class="deck-nav deck-nav--next" aria-hidden="true"></div>
 
