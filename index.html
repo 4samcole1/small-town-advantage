@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Small-Town Advantage — SC Creative</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #070d17;
+    --deep-bg: #020617;
+    --surface: #0b1520;
+    --surface-elevated: #071426;
+    --teal: #1cc7c3;
+    --teal-accent: #0EB1AB;
+    --gold: #c8921a;
+    --text: #e8eef4;
+    --text-neutral: #CBD5E1;
+    --text-muted: #94A3B8;
+    --soft-border: rgba(255,255,255,0.08);
+    --teal-glow: rgba(14,177,171,0.15);
+
+    --font-heading: 'Montserrat', ui-sans-serif, system-ui, sans-serif;
+    --font-body: 'Poppins', ui-sans-serif, system-ui, sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body {
+    width: 100%;
+    height: 100%;
+  }
+
+  body {
+    background: var(--deep-bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    overflow: hidden;
+  }
+
+  .slide {
+    width: 100vw;
+    height: 100vh;
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    padding: 8vh 10vw;
+    background: var(--bg);
+  }
+
+  .slide.active { display: flex; }
+
+  .slide__eyebrow {
+    color: var(--teal);
+    text-transform: uppercase;
+    letter-spacing: .15em;
+    font-weight: 600;
+    font-size: clamp(.9rem, 1.5vw, 1.2rem);
+    margin-bottom: 1.5rem;
+  }
+
+  .slide__title {
+    font-family: var(--font-heading);
+    font-weight: 800;
+    font-size: clamp(2.5rem, 6vw, 5rem);
+    line-height: 1.1;
+  }
+
+  .slide__body {
+    color: var(--text-neutral);
+    font-size: clamp(1.2rem, 2.4vw, 2rem);
+    line-height: 1.5;
+    max-width: 55ch;
+    margin-top: 2rem;
+  }
+
+  .deck-counter {
+    position: fixed;
+    bottom: 3vh;
+    right: 4vw;
+    color: var(--text-muted);
+    font-size: 1rem;
+    z-index: 10;
+  }
+
+  .deck-logo {
+    position: fixed;
+    top: 4vh;
+    left: 4vw;
+    height: 5vh;
+    opacity: .9;
+    z-index: 10;
+  }
+
+  .deck-nav {
+    position: fixed;
+    top: 0;
+    height: 100vh;
+    width: 33.333%;
+    z-index: 5;
+    cursor: pointer;
+    background: transparent;
+    border: none;
+  }
+
+  .deck-nav--prev { left: 0; }
+  .deck-nav--next { right: 0; }
+</style>
+</head>
+<body>
+
+  <img class="deck-logo" src="assets/logo-white.png" alt="SC Creative">
+
+  <section class="slide active">
+    <p class="slide__eyebrow">Slide Engine</p>
+    <h1 class="slide__title">Slide engine works</h1>
+    <p class="slide__body">This placeholder slide confirms the scaffold, brand tokens, and navigation engine are wired up correctly.</p>
+  </section>
+
+  <div class="deck-counter">1 / 1</div>
+  <div class="deck-nav deck-nav--prev" aria-hidden="true"></div>
+  <div class="deck-nav deck-nav--next" aria-hidden="true"></div>
+
+  <script>
+    const slides = Array.from(document.querySelectorAll('.slide'));
+    let current = 0;
+    const counter = document.querySelector('.deck-counter');
+    function render() {
+      slides.forEach((s, i) => s.classList.toggle('active', i === current));
+      counter.textContent = (current + 1) + ' / ' + slides.length;
+    }
+    function goTo(n) { current = Math.max(0, Math.min(slides.length - 1, n)); render(); }
+    function next() { goTo(current + 1); }
+    function prev() { goTo(current - 1); }
+    function toggleFullscreen() {
+      if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+      else document.exitFullscreen();
+    }
+    document.addEventListener('keydown', e => {
+      if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); next(); }
+      else if (e.key === 'ArrowLeft') { prev(); }
+      else if (e.key.toLowerCase() === 'f') { toggleFullscreen(); }
+    });
+    document.addEventListener('click', e => {
+      if (e.target.closest('a')) return;
+      (e.clientX < window.innerWidth / 3) ? prev() : next();
+    });
+    render();
+  </script>
+
+</body>
+</html>
