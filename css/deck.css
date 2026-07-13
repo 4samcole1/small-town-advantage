@@ -805,6 +805,37 @@ body::before {
 .growth__lbl { font-family: var(--font-heading); font-weight: 600; font-size: clamp(.82rem, 1.2vw, 1.05rem); color: var(--text-neutral); }
 .growth__lbl b { color: var(--teal); }
 
+/* Turnaround: a growth curve that wipes in left-to-right (line + fill + dots) */
+.turnaround { width: 100%; margin: 2rem 0 1rem; }
+/* Chart is fully visible by default; the wipe plays FROM clipped on activation,
+   so the full curve always shows even if the animation is skipped. */
+.ta-chart { position: relative; width: 100%; height: 27vh; }
+.slide.active .ta-chart { animation: ta-reveal 1.6s var(--ease) .3s backwards; }
+@keyframes ta-reveal { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
+.ta-svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.ta-line {
+  fill: none; stroke: #3ee07a; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+  filter: drop-shadow(0 0 7px rgba(48,192,96,.6));
+}
+.ta-dot {
+  position: absolute; width: 16px; height: 16px; margin: -8px 0 0 -8px;
+  border-radius: 50%; background: #3ee07a;
+  box-shadow: 0 0 16px rgba(48,192,96,.85);
+  border: 3px solid var(--bg);
+}
+.ta-dot--3 { width: 20px; height: 20px; margin: -10px 0 0 -10px; animation: ta-endpulse 2.2s ease-in-out infinite; }
+@keyframes ta-endpulse { 0%,100% { box-shadow: 0 0 16px rgba(48,192,96,.85); } 50% { box-shadow: 0 0 36px rgba(48,192,96,1); } }
+.ta-labels { display: flex; margin-top: 1.1rem; }
+.ta-lbl { flex: 1; text-align: center; }   /* visible by default */
+.ta-lbl b { display: block; font-family: var(--font-heading); font-weight: 800; font-size: clamp(1.15rem, 2.1vw, 1.7rem); color: var(--green); letter-spacing: -.01em; }
+.ta-lbl span { color: var(--text-muted); font-size: clamp(.8rem, 1.2vw, 1.02rem); }
+.slide.active .ta-lbl { animation: ta-lbl-in .5s var(--ease) backwards; }
+.slide.active .ta-lbl:nth-child(1) { animation-delay: .7s; }
+.slide.active .ta-lbl:nth-child(2) { animation-delay: 1.15s; }
+.slide.active .ta-lbl:nth-child(3) { animation-delay: 1.6s; }
+@keyframes ta-lbl-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+
 /* Turning-point chain: pills flow in sequentially, accent breathes */
 .slide.active .chain > * { animation: pop-in .5s var(--ease) both; }
 .slide.active .chain > *:nth-child(1) { animation-delay: .15s; }
@@ -854,5 +885,8 @@ body::before {
   .slide.active .chain > *, .chain__pill--accent { animation: none; }
   .ai-window__live::before, .ai-thinking, .typing::after,
   .clock-card__dot, .live-strip__tag::before, .online-chip::before { animation: none; }
+  .slide.active .ta-chart, .slide.active .ta-lbl, .ta-dot--3 { animation: none; }
+  .ta-chart { clip-path: none; }
+  .ta-lbl { opacity: 1; transform: none; }
   #deck-progress-fill { transition: none; }
 }

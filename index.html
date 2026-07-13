@@ -291,10 +291,27 @@
   <section class="slide">
     <p class="slide__eyebrow">The turnaround</p>
     <h1 class="slide__title">Now watch the same business&hellip; <span class="k">survive</span>.</h1>
-    <div class="stat-row">
-      <div class="stat stat--thrive"><div class="stat__number">&#10003;</div><div class="stat__bar"></div><div class="stat__label">survives</div></div>
-      <div class="stat stat--thrive"><div class="stat__number">&#10003;</div><div class="stat__bar"></div><div class="stat__label">grows</div></div>
-      <div class="stat stat--thrive"><div class="stat__number">&#10003;</div><div class="stat__bar"></div><div class="stat__label">hires</div></div>
+    <div class="turnaround">
+      <div class="ta-chart">
+        <svg class="ta-svg" viewBox="0 0 100 40" preserveAspectRatio="none" aria-hidden="true">
+          <defs>
+            <linearGradient id="taFill" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="rgba(62,224,122,0.38)"/>
+              <stop offset="100%" stop-color="rgba(62,224,122,0)"/>
+            </linearGradient>
+          </defs>
+          <path class="ta-area" d="M0,37 L16.7,31 L50,19 L83.3,7 L100,4 L100,40 L0,40 Z" fill="url(#taFill)"/>
+          <path class="ta-line" pathLength="1" d="M0,37 L16.7,31 L50,19 L83.3,7 L100,4"/>
+        </svg>
+        <span class="ta-dot ta-dot--1" style="left:16.7%;bottom:22.5%"></span>
+        <span class="ta-dot ta-dot--2" style="left:50%;bottom:52.5%"></span>
+        <span class="ta-dot ta-dot--3" style="left:83.3%;bottom:82.5%"></span>
+      </div>
+      <div class="ta-labels">
+        <div class="ta-lbl"><b>Survives</b><span>Year 1</span></div>
+        <div class="ta-lbl"><b>Grows</b><span>Year 3</span></div>
+        <div class="ta-lbl"><b>Hires</b><span>Year 5</span></div>
+      </div>
     </div>
     <p class="slide__body">Same owner. Same town. Different ending.</p>
   </section>
