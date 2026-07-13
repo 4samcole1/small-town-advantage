@@ -540,12 +540,14 @@ body::before {
   font-size: clamp(.82rem, 1.1vw, 1rem);
   line-height: 1.5;
   white-space: pre-wrap;
-  height: 25vh;                 /* fixed — window never grows off-screen */
+  height: 21vh;                 /* fixed — window never grows off-screen */
   overflow-y: auto;
+  /* anchor content to the BOTTOM so every card ends flush at the same line */
+  display: flex; flex-direction: column; justify-content: flex-end;
   scrollbar-width: none;        /* Firefox: hide scrollbar */
-  /* soft fade at top & bottom so scrolled content dissolves instead of hard-cutting */
-  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 6%, #000 91%, transparent 100%);
-          mask-image: linear-gradient(to bottom, transparent 0, #000 6%, #000 91%, transparent 100%);
+  /* fade only at the TOP, where scrolled-away lines dissolve; flush at the bottom */
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 16%, #000 100%);
+          mask-image: linear-gradient(to bottom, transparent 0, #000 16%, #000 100%);
 }
 .demo-stream::-webkit-scrollbar { display: none; }  /* Chrome/Safari: hide scrollbar */
 /* resting placeholder state (never an empty void) */
