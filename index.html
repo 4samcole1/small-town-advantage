@@ -7,784 +7,203 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/deck.css">
 <script>window.AI_CONFIG = window.AI_CONFIG || { apiKey: "", model: "claude-haiku-4-5" };</script>
 <script src="config.js" onerror="/* no config.js — fallback mode */"></script>
-<style>
-  :root {
-    --bg: #070d17;
-    --deep-bg: #020617;
-    --surface: #0b1520;
-    --surface-elevated: #071426;
-    --teal: #1cc7c3;
-    --teal-accent: #0EB1AB;
-    --gold: #c8921a;
-    --text: #e8eef4;
-    --text-neutral: #CBD5E1;
-    --text-muted: #94A3B8;
-    --soft-border: rgba(255,255,255,0.08);
-    --teal-glow: rgba(14,177,171,0.15);
-
-    --font-heading: 'Montserrat', ui-sans-serif, system-ui, sans-serif;
-    --font-body: 'Poppins', ui-sans-serif, system-ui, sans-serif;
-  }
-
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-
-  html, body {
-    width: 100%;
-    height: 100%;
-  }
-
-  body {
-    background: var(--deep-bg);
-    color: var(--text);
-    font-family: var(--font-body);
-    overflow: hidden;
-  }
-
-  #bg-canvas {
-    position: fixed;
-    inset: 0;
-    z-index: 0;
-    pointer-events: none;
-  }
-
-  .slide {
-    position: relative;
-    z-index: 1;
-    width: 100vw;
-    height: 100vh;
-    display: none;
-    flex-direction: column;
-    justify-content: center;
-    padding: 8vh 10vw;
-    background: var(--bg);
-  }
-
-  .slide.active {
-    display: flex;
-    animation: slide-fade-in 280ms ease;
-  }
-
-  @keyframes slide-fade-in {
-    from { opacity: 0; transform: translateY(14px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .slide.active { animation: none; }
-    #deck-progress-fill { transition: none; }
-  }
-
-  #deck-progress {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 4px;
-    background: var(--surface);
-    z-index: 20;
-  }
-
-  #deck-progress-fill {
-    height: 100%;
-    width: 0%;
-    background: var(--teal);
-    transition: width 300ms ease;
-  }
-
-  .slide__eyebrow {
-    color: var(--teal);
-    text-transform: uppercase;
-    letter-spacing: .15em;
-    font-weight: 600;
-    font-size: clamp(.9rem, 1.5vw, 1.2rem);
-    margin-bottom: 1.5rem;
-  }
-
-  .slide__title {
-    font-family: var(--font-heading);
-    font-weight: 800;
-    font-size: clamp(2.5rem, 6vw, 5rem);
-    line-height: 1.1;
-  }
-
-  .slide__body {
-    color: var(--text-neutral);
-    font-size: clamp(1.2rem, 2.4vw, 2rem);
-    line-height: 1.5;
-    max-width: 55ch;
-    margin-top: 2rem;
-  }
-
-  .deck-counter {
-    position: fixed;
-    bottom: 3vh;
-    right: 4vw;
-    color: var(--text-muted);
-    font-size: 1rem;
-    z-index: 10;
-  }
-
-  .deck-logo {
-    position: fixed;
-    top: 4vh;
-    left: 4vw;
-    height: 5vh;
-    opacity: .9;
-    z-index: 10;
-  }
-
-  .deck-nav {
-    position: fixed;
-    top: 0;
-    height: 100vh;
-    width: 33.333%;
-    z-index: 5;
-    cursor: pointer;
-    background: transparent;
-    border: none;
-  }
-
-  .deck-nav--prev { left: 0; }
-  .deck-nav--next { right: 0; }
-
-  .slide--center {
-    align-items: center;
-    text-align: center;
-  }
-
-  .title-underline {
-    width: 110px;
-    height: 7px;
-    background: var(--gold);
-    border-radius: 4px;
-    margin-top: 1.5rem;
-  }
-
-  .stat-row {
-    display: flex;
-    gap: 4rem;
-    margin-top: 3rem;
-    margin-bottom: 2.5rem;
-  }
-
-  .stat {
-    flex: 1;
-    text-align: center;
-  }
-
-  .stat__number {
-    font-family: var(--font-heading);
-    font-weight: 800;
-    font-size: clamp(3rem, 7vw, 5.5rem);
-    line-height: 1;
-  }
-
-  .stat--teal .stat__number { color: var(--teal); }
-  .stat--gold .stat__number { color: var(--gold); }
-
-  .stat__label {
-    color: var(--text-muted);
-    font-size: clamp(.9rem, 1.4vw, 1.1rem);
-    margin-top: .75rem;
-    line-height: 1.3;
-  }
-
-  /* Scenario template (slides 6–11) */
-  .scenario-header {
-    display: flex;
-    align-items: center;
-    gap: 1.25rem;
-    margin-bottom: 2.5rem;
-  }
-
-  .scenario-header .slide__title {
-    font-size: clamp(2rem, 4vw, 3.4rem);
-  }
-
-  .scenario-icon {
-    font-size: clamp(2.2rem, 4vw, 3.2rem);
-    line-height: 1;
-  }
-
-  .scenario {
-    display: flex;
-    align-items: stretch;
-    gap: 1.25rem;
-    width: 100%;
-  }
-
-  .scenario__step {
-    flex: 1;
-    min-width: 0;
-    background: var(--surface);
-    border: 1px solid var(--soft-border);
-    border-radius: 16px;
-    padding: 1.75rem 1.5rem;
-    display: flex;
-    flex-direction: column;
-    gap: .75rem;
-  }
-
-  .scenario__step--result {
-    border-color: var(--teal);
-    box-shadow: 0 0 0 1px var(--teal), 0 20px 45px var(--teal-glow);
-  }
-
-  .scenario__label {
-    color: var(--teal);
-    text-transform: uppercase;
-    letter-spacing: .12em;
-    font-weight: 600;
-    font-size: clamp(.8rem, 1.1vw, 1rem);
-  }
-
-  .scenario__text {
-    color: var(--text-neutral);
-    font-size: clamp(1rem, 1.5vw, 1.3rem);
-    line-height: 1.45;
-  }
-
-  .scenario__step--result .scenario__text {
-    color: var(--text);
-    font-weight: 500;
-    font-style: italic;
-  }
-
-  .scenario__arrow {
-    align-self: center;
-    color: var(--gold);
-    font-size: clamp(1.4rem, 2.2vw, 2.1rem);
-    flex-shrink: 0;
-  }
-
-  /* City of Jasper live assistant (slide 6) */
-  .city-chat {
-    margin-top: 1.5rem;
-    width: 100%;
-  }
-
-  .city-chat__label {
-    color: var(--teal);
-    text-transform: uppercase;
-    letter-spacing: .1em;
-    font-weight: 600;
-    font-size: clamp(.7rem, .95vw, .85rem);
-    margin-bottom: .6rem;
-  }
-
-  .city-form {
-    display: flex;
-    gap: .75rem;
-    width: 100%;
-    max-width: 620px;
-  }
-
-  #city-input {
-    flex: 1;
-    min-width: 0;
-    background: var(--surface);
-    border: 1px solid var(--soft-border);
-    border-radius: 10px;
-    padding: .7rem 1rem;
-    color: var(--text);
-    font-family: var(--font-body);
-    font-size: clamp(.85rem, 1.15vw, 1rem);
-  }
-
-  #city-input::placeholder { color: var(--text-muted); }
-
-  #city-input:focus {
-    outline: none;
-    border-color: var(--teal);
-    box-shadow: 0 0 0 1px var(--teal);
-  }
-
-  #city-go {
-    flex-shrink: 0;
-    background: var(--teal);
-    color: var(--deep-bg);
-    border: none;
-    border-radius: 10px;
-    padding: .7rem 1.4rem;
-    font-family: var(--font-heading);
-    font-weight: 700;
-    font-size: clamp(.85rem, 1.15vw, 1rem);
-    cursor: pointer;
-    transition: background 150ms ease;
-  }
-
-  #city-go:hover { background: var(--teal-accent); }
-
-  #city-go:disabled {
-    opacity: .6;
-    cursor: default;
-  }
-
-  .city-answer {
-    margin-top: .75rem;
-    max-width: 620px;
-    min-height: 2.6rem;
-    max-height: 15vh;
-    overflow-y: auto;
-    background: var(--surface-elevated);
-    border: 1px solid var(--soft-border);
-    border-radius: 10px;
-    padding: .8rem 1.1rem;
-    color: var(--text-neutral);
-    font-size: clamp(.8rem, 1.05vw, .95rem);
-    line-height: 1.5;
-    white-space: pre-wrap;
-  }
-
-  .city-answer.ai-thinking {
-    color: var(--text-muted);
-    font-style: italic;
-    animation: demo-pulse 1.1s ease-in-out infinite;
-  }
-
-  /* Chain component (slide 12) */
-  .chain {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 1rem;
-    margin-top: 2rem;
-  }
-
-  .chain__pill {
-    background: var(--surface);
-    border: 1px solid var(--soft-border);
-    border-radius: 999px;
-    padding: 1rem 1.75rem;
-    font-family: var(--font-heading);
-    font-weight: 700;
-    font-size: clamp(1rem, 1.7vw, 1.4rem);
-    color: var(--text-neutral);
-    white-space: nowrap;
-  }
-
-  .chain__pill--accent {
-    background: var(--surface-elevated);
-    border-color: var(--gold);
-    color: var(--gold);
-    box-shadow: 0 0 0 1px var(--gold), 0 20px 45px var(--teal-glow);
-  }
-
-  .chain__arrow {
-    color: var(--gold);
-    font-size: clamp(1.2rem, 2vw, 1.8rem);
-    flex-shrink: 0;
-  }
-
-  /* Start list (slide 16) */
-  .start-list {
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: 1.25rem;
-    margin-top: 2.5rem;
-    width: 100%;
-  }
-
-  .start-list__item {
-    display: flex;
-    align-items: center;
-    gap: 1.75rem;
-    background: var(--surface);
-    border: 1px solid var(--soft-border);
-    border-radius: 16px;
-    padding: 1.5rem 2rem;
-  }
-
-  .start-list__number {
-    font-family: var(--font-heading);
-    font-weight: 800;
-    font-size: clamp(1.8rem, 3.2vw, 2.6rem);
-    color: var(--teal);
-    flex-shrink: 0;
-    width: clamp(2.2rem, 3.5vw, 3rem);
-    text-align: center;
-  }
-
-  .start-list__item--accent .start-list__number { color: var(--gold); }
-
-  .start-list__text {
-    color: var(--text-neutral);
-    font-size: clamp(1.1rem, 1.9vw, 1.5rem);
-    line-height: 1.4;
-  }
-
-  /* Contact slide (slide 18) */
-  .contact-logo {
-    height: 14vh;
-    margin-bottom: 2.5rem;
-    opacity: .95;
-  }
-
-  .contact-line {
-    margin-top: 2.5rem;
-    font-family: var(--font-heading);
-    font-weight: 600;
-    font-size: clamp(1.2rem, 2.2vw, 1.7rem);
-    color: var(--text);
-  }
-
-  .contact-line a {
-    color: var(--teal);
-    text-decoration: none;
-  }
-
-  .contact-line a:hover { text-decoration: underline; }
-
-  .contact-line__placeholder {
-    color: var(--text-muted);
-    font-style: italic;
-    font-weight: 400;
-  }
-
-  /* Live demo slide (slide 12) */
-  .slide--demo .slide__title {
-    font-size: clamp(2rem, 4vw, 3.4rem);
-  }
-
-  .demo-form {
-    display: flex;
-    gap: 1rem;
-    margin-top: 2rem;
-    width: 100%;
-    max-width: 720px;
-  }
-
-  #demo-input {
-    flex: 1;
-    min-width: 0;
-    background: var(--surface);
-    border: 1px solid var(--soft-border);
-    border-radius: 12px;
-    padding: 1rem 1.25rem;
-    color: var(--text);
-    font-family: var(--font-body);
-    font-size: clamp(1rem, 1.6vw, 1.25rem);
-  }
-
-  #demo-input::placeholder { color: var(--text-muted); }
-
-  #demo-input:focus {
-    outline: none;
-    border-color: var(--teal);
-    box-shadow: 0 0 0 1px var(--teal);
-  }
-
-  #demo-go {
-    flex-shrink: 0;
-    background: var(--teal);
-    color: var(--deep-bg);
-    border: none;
-    border-radius: 12px;
-    padding: 1rem 1.75rem;
-    font-family: var(--font-heading);
-    font-weight: 700;
-    font-size: clamp(1rem, 1.6vw, 1.25rem);
-    cursor: pointer;
-    transition: background 150ms ease, transform 150ms ease;
-  }
-
-  #demo-go:hover { background: var(--teal-accent); }
-
-  #demo-go:disabled {
-    opacity: .6;
-    cursor: default;
-    transform: none;
-  }
-
-  .demo-grid {
-    display: flex;
-    gap: 1.5rem;
-    width: 100%;
-    margin-top: 2.5rem;
-    align-items: stretch;
-  }
-
-  .demo-out {
-    flex: 1;
-    min-width: 0;
-    background: var(--surface);
-    border: 1px solid var(--soft-border);
-    border-radius: 16px;
-    padding: 1.5rem;
-    display: flex;
-    flex-direction: column;
-    gap: .85rem;
-  }
-
-  .demo-out__label {
-    color: var(--teal);
-    text-transform: uppercase;
-    letter-spacing: .1em;
-    font-weight: 600;
-    font-size: clamp(.75rem, 1vw, .9rem);
-  }
-
-  .demo-stream {
-    color: var(--text-neutral);
-    font-size: clamp(.85rem, 1.15vw, 1.05rem);
-    line-height: 1.5;
-    white-space: pre-wrap;
-    min-height: 8rem;
-    max-height: 26vh;
-    overflow-y: auto;
-  }
-
-  .demo-stream.ai-thinking {
-    color: var(--text-muted);
-    font-style: italic;
-    animation: demo-pulse 1.1s ease-in-out infinite;
-  }
-
-  @keyframes demo-pulse {
-    0%, 100% { opacity: .55; }
-    50% { opacity: 1; }
-  }
-
-  .typing::after {
-    content: '|';
-    color: var(--teal);
-    animation: demo-caret-blink 0.9s step-end infinite;
-    margin-left: 1px;
-  }
-
-  @keyframes demo-caret-blink {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0; }
-  }
-</style>
 </head>
 <body>
 
   <canvas id="bg-canvas" aria-hidden="true"></canvas>
-
   <div id="deck-progress"><div id="deck-progress-fill"></div></div>
-
   <img class="deck-logo" src="assets/logo-white.png" alt="SC Creative">
 
-  <section class="slide active">
+  <!-- 1. Title -->
+  <section class="slide">
     <p class="slide__eyebrow">SC Creative &middot; Rotary Club of Jasper</p>
-    <h1 class="slide__title" data-typewriter data-text="The Small-Town Advantage">The Small-Town Advantage</h1>
+    <h1 class="slide__title grad" data-typewriter data-text="The Small-Town Advantage">The Small-Town Advantage</h1>
     <div class="title-underline"></div>
-    <p class="slide__body">How AI Levels the Playing Field for Jasper.</p>
+    <p class="slide__body">How AI levels the playing field for Jasper.</p>
   </section>
 
+  <!-- 2. Fear hook -->
   <section class="slide slide--center">
-    <h1 class="slide__title" data-typewriter data-text="&ldquo;Isn&rsquo;t AI going to replace us?&rdquo;">&ldquo;Isn&rsquo;t AI going to replace us?&rdquo;</h1>
+    <h1 class="slide__title grad" data-typewriter data-text="&ldquo;Isn&rsquo;t AI going to replace us?&rdquo;">&ldquo;Isn&rsquo;t AI going to replace us?&rdquo;</h1>
     <p class="slide__body">Let&rsquo;s start with the fear everyone in this room already has.</p>
   </section>
 
+  <!-- 3. The hard truth -->
   <section class="slide">
     <p class="slide__eyebrow">The reality</p>
-    <h1 class="slide__title">Half are gone by year five.</h1>
+    <h1 class="slide__title">Half are gone by <span class="k--red">year five</span>.</h1>
     <div class="stat-row">
-      <div class="stat stat--teal">
-        <div class="stat__number">20%</div>
-        <div class="stat__label">fail within year one</div>
-      </div>
-      <div class="stat stat--gold">
-        <div class="stat__number">50%</div>
-        <div class="stat__label">gone by year five</div>
-      </div>
-      <div class="stat stat--teal">
-        <div class="stat__number">65%</div>
-        <div class="stat__label">gone by year ten</div>
-      </div>
+      <div class="stat stat--decline1"><div class="stat__number">20%</div><div class="stat__bar"></div><div class="stat__label">fail within year one</div></div>
+      <div class="stat stat--decline2"><div class="stat__number">50%</div><div class="stat__bar"></div><div class="stat__label">gone by year five</div></div>
+      <div class="stat stat--decline3"><div class="stat__number">65%</div><div class="stat__bar"></div><div class="stat__label">gone by year ten</div></div>
     </div>
     <p class="slide__body">Not because the owner wasn&rsquo;t talented. Because they drowned in the busywork and never got to work <em>on</em> the business.</p>
   </section>
 
+  <!-- 4. Big idea -->
   <section class="slide">
     <p class="slide__eyebrow">The shift</p>
-    <h1 class="slide__title">For the first time, small can compete with big.</h1>
+    <h1 class="slide__title">For the first time, small can compete with <span class="k">big</span>.</h1>
     <p class="slide__body">A Walker County shop, a city office, a two-person non-profit can now afford the same leverage as an organization 100&times; its size.</p>
   </section>
 
+  <!-- 5. What AI is -->
   <section class="slide">
     <p class="slide__eyebrow">In plain English</p>
-    <h1 class="slide__title">A very smart assistant that never sleeps.</h1>
+    <h1 class="slide__title">A very smart assistant that <span class="k">never sleeps</span>.</h1>
     <p class="slide__body">It reads, writes, answers, and organizes &mdash; instantly, around the clock &mdash; so you and your people don&rsquo;t have to.</p>
   </section>
 
+  <!-- 6. City of Jasper (+ live assistant) -->
   <section class="slide">
     <div class="scenario-header">
-      <span class="scenario-icon" aria-hidden="true">&#127963;&#65039;</span>
+      <span class="chip-icon" aria-hidden="true">&#127963;&#65039;</span>
       <h1 class="slide__title">City of Jasper</h1>
+      <span class="scenario-tag">Public sector</span>
     </div>
     <div class="scenario">
-      <div class="scenario__step">
-        <p class="scenario__label">The problem</p>
-        <p class="scenario__text">Residents flood the office with the same questions &mdash; trash pickup, permits, payments.</p>
-      </div>
+      <div class="scenario__step scenario__step--problem"><p class="scenario__label">The problem</p><p class="scenario__text">Residents flood the office with the same questions &mdash; trash pickup, permits, payments.</p></div>
       <div class="scenario__arrow" aria-hidden="true">&rarr;</div>
-      <div class="scenario__step">
-        <p class="scenario__label">The fix</p>
-        <p class="scenario__text">An AI assistant on the city website and phone answers instantly, 24/7.</p>
-      </div>
+      <div class="scenario__step scenario__step--fix"><p class="scenario__label">The fix</p><p class="scenario__text">An AI assistant on the city website and phone answers instantly, 24/7.</p></div>
       <div class="scenario__arrow" aria-hidden="true">&rarr;</div>
-      <div class="scenario__step scenario__step--result">
-        <p class="scenario__label">The result</p>
-        <p class="scenario__text">&ldquo;Like adding a full-time clerk &mdash; without adding payroll.&rdquo;</p>
-      </div>
+      <div class="scenario__step scenario__step--result"><p class="scenario__label">The result</p><p class="scenario__text">&ldquo;Like adding a full-time clerk &mdash; without adding payroll.&rdquo;</p></div>
     </div>
-    <div class="city-chat">
-      <p class="city-chat__label">Try it &mdash; ask the city&rsquo;s AI assistant</p>
-      <div class="city-form">
-        <input type="text" id="city-input" placeholder="Ask the city&rsquo;s AI assistant&hellip;" autocomplete="off">
-        <button type="button" id="city-go">Ask</button>
+    <div class="ai-window" style="margin-top:1.6rem;max-width:760px;">
+      <div class="ai-window__bar">
+        <span class="ai-window__dots"><i></i><i></i><i></i></span>
+        <span class="ai-window__name">City of Jasper &middot; AI Assistant</span>
+        <span class="ai-window__live">Live</span>
       </div>
-      <div class="city-answer" id="city-answer"></div>
+      <div class="ai-window__body">
+        <div class="ai-field">
+          <input type="text" id="city-input" class="ai-input" placeholder="Ask the city&rsquo;s AI assistant&hellip;" autocomplete="off">
+          <button type="button" id="city-go" class="ai-btn">Ask</button>
+        </div>
+        <div class="city-answer" id="city-answer" data-rest="Ask a question to see a live answer&hellip;"></div>
+      </div>
     </div>
   </section>
 
+  <!-- 7. Sheriff -->
   <section class="slide">
     <div class="scenario-header">
-      <span class="scenario-icon" aria-hidden="true">&#128680;</span>
+      <span class="chip-icon" aria-hidden="true">&#128680;</span>
       <h1 class="slide__title">Walker County Sheriff&rsquo;s Department</h1>
+      <span class="scenario-tag">Public sector</span>
     </div>
     <div class="scenario">
-      <div class="scenario__step">
-        <p class="scenario__label">The problem</p>
-        <p class="scenario__text">Deputies spend hours writing reports instead of patrolling.</p>
-      </div>
+      <div class="scenario__step scenario__step--problem"><p class="scenario__label">The problem</p><p class="scenario__text">Deputies spend hours writing reports instead of patrolling.</p></div>
       <div class="scenario__arrow" aria-hidden="true">&rarr;</div>
-      <div class="scenario__step">
-        <p class="scenario__label">The fix</p>
-        <p class="scenario__text">AI drafts incident reports straight from their notes and dictation.</p>
-      </div>
+      <div class="scenario__step scenario__step--fix"><p class="scenario__label">The fix</p><p class="scenario__text">AI drafts incident reports straight from their notes and dictation.</p></div>
       <div class="scenario__arrow" aria-hidden="true">&rarr;</div>
-      <div class="scenario__step scenario__step--result">
-        <p class="scenario__label">The result</p>
-        <p class="scenario__text">&ldquo;Hours of paperwork back every shift &mdash; more deputies on the street, not behind a desk.&rdquo;</p>
-      </div>
+      <div class="scenario__step scenario__step--result"><p class="scenario__label">The result</p><p class="scenario__text">&ldquo;Hours of paperwork back every shift &mdash; more deputies on the street, not behind a desk.&rdquo;</p></div>
     </div>
   </section>
 
+  <!-- 8. Non-profit -->
   <section class="slide">
     <div class="scenario-header">
-      <span class="scenario-icon" aria-hidden="true">&#129309;</span>
+      <span class="chip-icon" aria-hidden="true">&#129309;</span>
       <h1 class="slide__title">Local Non-Profit</h1>
+      <span class="scenario-tag">Mission</span>
     </div>
     <div class="scenario">
-      <div class="scenario__step">
-        <p class="scenario__label">The problem</p>
-        <p class="scenario__text">A two-person team, a big mission, and no time left for outreach or grants.</p>
-      </div>
+      <div class="scenario__step scenario__step--problem"><p class="scenario__label">The problem</p><p class="scenario__text">A two-person team, a big mission, and no time left for outreach or grants.</p></div>
       <div class="scenario__arrow" aria-hidden="true">&rarr;</div>
-      <div class="scenario__step">
-        <p class="scenario__label">The fix</p>
-        <p class="scenario__text">AI drafts newsletters, social posts, and first-pass grant applications.</p>
-      </div>
+      <div class="scenario__step scenario__step--fix"><p class="scenario__label">The fix</p><p class="scenario__text">AI drafts newsletters, social posts, and first-pass grant applications.</p></div>
       <div class="scenario__arrow" aria-hidden="true">&rarr;</div>
-      <div class="scenario__step scenario__step--result">
-        <p class="scenario__label">The result</p>
-        <p class="scenario__text">&ldquo;The reach of a 10-person team with the staff of two.&rdquo;</p>
-      </div>
+      <div class="scenario__step scenario__step--result"><p class="scenario__label">The result</p><p class="scenario__text">&ldquo;The reach of a 10-person team with the staff of two.&rdquo;</p></div>
     </div>
   </section>
 
+  <!-- 9. Clothing store -->
   <section class="slide">
     <div class="scenario-header">
-      <span class="scenario-icon" aria-hidden="true">&#128085;</span>
+      <span class="chip-icon" aria-hidden="true">&#128085;</span>
       <h1 class="slide__title">The Clothing Store on the Square</h1>
+      <span class="scenario-tag">Retail</span>
     </div>
     <div class="scenario">
-      <div class="scenario__step">
-        <p class="scenario__label">The problem</p>
-        <p class="scenario__text">The owner can&rsquo;t keep up with posting, promos, and product descriptions.</p>
-      </div>
+      <div class="scenario__step scenario__step--problem"><p class="scenario__label">The problem</p><p class="scenario__text">The owner can&rsquo;t keep up with posting, promos, and product descriptions.</p></div>
       <div class="scenario__arrow" aria-hidden="true">&rarr;</div>
-      <div class="scenario__step">
-        <p class="scenario__label">The fix</p>
-        <p class="scenario__text">AI writes a week of social posts and product copy in minutes.</p>
-      </div>
+      <div class="scenario__step scenario__step--fix"><p class="scenario__label">The fix</p><p class="scenario__text">AI writes a week of social posts and product copy in minutes.</p></div>
       <div class="scenario__arrow" aria-hidden="true">&rarr;</div>
-      <div class="scenario__step scenario__step--result">
-        <p class="scenario__label">The result</p>
-        <p class="scenario__text">&ldquo;Consistent marketing without hiring an agency &mdash; and foot traffic follows.&rdquo;</p>
-      </div>
+      <div class="scenario__step scenario__step--result"><p class="scenario__label">The result</p><p class="scenario__text">&ldquo;Consistent marketing without hiring an agency &mdash; and foot traffic follows.&rdquo;</p></div>
     </div>
   </section>
 
+  <!-- 10. Insurance -->
   <section class="slide">
     <div class="scenario-header">
-      <span class="scenario-icon" aria-hidden="true">&#128203;</span>
+      <span class="chip-icon" aria-hidden="true">&#128203;</span>
       <h1 class="slide__title">The Insurance Office</h1>
+      <span class="scenario-tag">Services</span>
     </div>
     <div class="scenario">
-      <div class="scenario__step">
-        <p class="scenario__label">The problem</p>
-        <p class="scenario__text">Agents are buried in admin, quotes, and follow-ups.</p>
-      </div>
+      <div class="scenario__step scenario__step--problem"><p class="scenario__label">The problem</p><p class="scenario__text">Agents are buried in admin, quotes, and follow-ups.</p></div>
       <div class="scenario__arrow" aria-hidden="true">&rarr;</div>
-      <div class="scenario__step">
-        <p class="scenario__label">The fix</p>
-        <p class="scenario__text">AI handles first-draft emails, summaries, and reminders.</p>
-      </div>
+      <div class="scenario__step scenario__step--fix"><p class="scenario__label">The fix</p><p class="scenario__text">AI handles first-draft emails, summaries, and reminders.</p></div>
       <div class="scenario__arrow" aria-hidden="true">&rarr;</div>
-      <div class="scenario__step scenario__step--result">
-        <p class="scenario__label">The result</p>
-        <p class="scenario__text">&ldquo;Agents back to selling and serving clients &mdash; not shuffling paper.&rdquo;</p>
-      </div>
+      <div class="scenario__step scenario__step--result"><p class="scenario__label">The result</p><p class="scenario__text">&ldquo;Agents back to selling and serving clients &mdash; not shuffling paper.&rdquo;</p></div>
     </div>
   </section>
 
+  <!-- 11. HVAC -->
   <section class="slide">
     <div class="scenario-header">
-      <span class="scenario-icon" aria-hidden="true">&#128295;</span>
+      <span class="chip-icon" aria-hidden="true">&#128295;</span>
       <h1 class="slide__title">The HVAC Contractor</h1>
+      <span class="scenario-tag">Trades</span>
     </div>
     <div class="scenario">
-      <div class="scenario__step">
-        <p class="scenario__label">The problem</p>
-        <p class="scenario__text">After-hours calls go to voicemail, and the lead calls the next company.</p>
-      </div>
+      <div class="scenario__step scenario__step--problem"><p class="scenario__label">The problem</p><p class="scenario__text">After-hours calls go to voicemail, and the lead calls the next company.</p></div>
       <div class="scenario__arrow" aria-hidden="true">&rarr;</div>
-      <div class="scenario__step">
-        <p class="scenario__label">The fix</p>
-        <p class="scenario__text">AI answers, books, and texts back instantly, day or night.</p>
-      </div>
+      <div class="scenario__step scenario__step--fix"><p class="scenario__label">The fix</p><p class="scenario__text">AI answers, books, and texts back instantly, day or night.</p></div>
       <div class="scenario__arrow" aria-hidden="true">&rarr;</div>
-      <div class="scenario__step scenario__step--result">
-        <p class="scenario__label">The result</p>
-        <p class="scenario__text">&ldquo;Not one more job lost to a missed call.&rdquo;</p>
-      </div>
+      <div class="scenario__step scenario__step--result"><p class="scenario__label">The result</p><p class="scenario__text">&ldquo;Not one more job lost to a missed call.&rdquo;</p></div>
     </div>
   </section>
 
+  <!-- 12. Live demo (hero) -->
   <section class="slide slide--demo">
     <p class="slide__eyebrow">Live &mdash; right now</p>
-    <h1 class="slide__title">Name a business. Any business in this room.</h1>
-    <div class="demo-form">
-      <input type="text" id="demo-input" placeholder="e.g. Joe's Barbecue" autocomplete="off">
-      <button type="button" id="demo-go">Watch AI go &rarr;</button>
-    </div>
-    <div class="demo-grid">
-      <div class="demo-out">
-        <p class="demo-out__label">This week&rsquo;s social posts</p>
-        <div class="demo-stream" id="demo-social"></div>
+    <h1 class="slide__title">Name a business. Any business in this <span class="k">room</span>.</h1>
+    <div class="ai-window" style="margin-top:1.8rem;">
+      <div class="ai-window__bar">
+        <span class="ai-window__dots"><i></i><i></i><i></i></span>
+        <span class="ai-window__name">SC Creative &middot; AI Marketing Studio</span>
+        <span class="ai-window__live">Live</span>
       </div>
-      <div class="demo-out">
-        <p class="demo-out__label">Reply to a bad review</p>
-        <div class="demo-stream" id="demo-review"></div>
-      </div>
-      <div class="demo-out">
-        <p class="demo-out__label">After-hours text back</p>
-        <div class="demo-stream" id="demo-sms"></div>
+      <div class="ai-window__body">
+        <div class="ai-field">
+          <input type="text" id="demo-input" class="ai-input" placeholder="e.g. Joe's Barbecue" autocomplete="off">
+          <button type="button" id="demo-go" class="ai-btn">Watch AI go &rarr;</button>
+        </div>
+        <div class="demo-grid">
+          <div class="demo-out">
+            <p class="demo-out__label"><span>&#128241;</span> This week&rsquo;s social posts</p>
+            <div class="demo-stream" id="demo-social" data-rest="Waiting for a business name&hellip;"></div>
+          </div>
+          <div class="demo-out">
+            <p class="demo-out__label"><span>&#11088;</span> Reply to a bad review</p>
+            <div class="demo-stream" id="demo-review" data-rest="Waiting&hellip;"></div>
+          </div>
+          <div class="demo-out">
+            <p class="demo-out__label"><span>&#128172;</span> After-hours text back</p>
+            <div class="demo-stream" id="demo-sms" data-rest="Waiting&hellip;"></div>
+          </div>
+        </div>
       </div>
     </div>
   </section>
 
+  <!-- 13. Turning point -->
   <section class="slide">
     <p class="slide__eyebrow">What happens next</p>
-    <h1 class="slide__title">The hours come back. Then the margins. Then the people.</h1>
+    <h1 class="slide__title">The hours come back. Then the margins. Then the <span class="k">people</span>.</h1>
     <div class="chain">
       <div class="chain__pill">Reclaimed hours</div>
       <div class="chain__arrow" aria-hidden="true">&rarr;</div>
@@ -794,66 +213,54 @@
       <div class="chain__arrow" aria-hidden="true">&rarr;</div>
       <div class="chain__pill">The business scales</div>
     </div>
-    <p class="slide__body">AI doesn&rsquo;t cut the jobs. It funds them.</p>
+    <p class="slide__body">AI doesn&rsquo;t cut the jobs. It <em>funds</em> them.</p>
   </section>
 
+  <!-- 14. Flipped outcome -->
   <section class="slide">
     <p class="slide__eyebrow">The turnaround</p>
-    <h1 class="slide__title">Now watch the same business&hellip; survive.</h1>
+    <h1 class="slide__title">Now watch the same business&hellip; <span class="k">survive</span>.</h1>
     <div class="stat-row">
-      <div class="stat stat--teal">
-        <div class="stat__number">&#10003;</div>
-        <div class="stat__label">survives</div>
-      </div>
-      <div class="stat stat--teal">
-        <div class="stat__number">&#10003;</div>
-        <div class="stat__label">grows</div>
-      </div>
-      <div class="stat stat--teal">
-        <div class="stat__number">&#10003;</div>
-        <div class="stat__label">hires</div>
-      </div>
+      <div class="stat stat--thrive"><div class="stat__number">&#10003;</div><div class="stat__bar"></div><div class="stat__label">survives</div></div>
+      <div class="stat stat--thrive"><div class="stat__number">&#10003;</div><div class="stat__bar"></div><div class="stat__label">grows</div></div>
+      <div class="stat stat--thrive"><div class="stat__number">&#10003;</div><div class="stat__bar"></div><div class="stat__label">hires</div></div>
     </div>
     <p class="slide__body">Same owner. Same town. Different ending.</p>
   </section>
 
+  <!-- 15. Economy angle -->
   <section class="slide">
     <p class="slide__eyebrow">Why this matters for Jasper</p>
-    <h1 class="slide__title">When Main Street rises, the whole town rises.</h1>
+    <h1 class="slide__title">When Main Street rises, <span class="k">the whole town rises</span>.</h1>
     <p class="slide__body">Every business and every public office doing this means more local jobs, money that stays in Walker County, better services, and a town that competes with anybody.</p>
   </section>
 
+  <!-- 16. Humans + AI -->
   <section class="slide slide--center">
     <p class="slide__eyebrow">The honest part</p>
-    <h1 class="slide__title">AI doesn&rsquo;t replace people. It replaces the tasks nobody has time for.</h1>
+    <h1 class="slide__title">AI doesn&rsquo;t replace people. It replaces the tasks <span class="k">nobody has time for</span>.</h1>
     <p class="slide__body">The human work &mdash; the handshake, the craft, the care &mdash; is exactly what this frees you to do more of.</p>
   </section>
 
+  <!-- 17. Start Monday -->
   <section class="slide">
     <p class="slide__eyebrow">Try this Monday</p>
-    <h1 class="slide__title">Three things you can do this week.</h1>
+    <h1 class="slide__title">Three things you can do this <span class="k">week</span>.</h1>
     <ol class="start-list">
-      <li class="start-list__item">
-        <span class="start-list__number">1</span>
-        <p class="start-list__text">Pick your most annoying repetitive task and ask an AI tool to write the first draft.</p>
-      </li>
-      <li class="start-list__item">
-        <span class="start-list__number">2</span>
-        <p class="start-list__text">Let AI answer your after-hours messages so no lead ever goes cold.</p>
-      </li>
-      <li class="start-list__item start-list__item--accent">
-        <span class="start-list__number">3</span>
-        <p class="start-list__text">Ask it to write one week of your marketing &mdash; then edit, don&rsquo;t start from scratch.</p>
-      </li>
+      <li class="start-list__item"><span class="start-list__number">1</span><p class="start-list__text">Pick your most annoying repetitive task and ask an AI tool to write the first draft.</p></li>
+      <li class="start-list__item"><span class="start-list__number">2</span><p class="start-list__text">Let AI answer your after-hours messages so no lead ever goes cold.</p></li>
+      <li class="start-list__item start-list__item--accent"><span class="start-list__number">3</span><p class="start-list__text">Ask it to write one week of your marketing &mdash; then edit, don&rsquo;t start from scratch.</p></li>
     </ol>
   </section>
 
+  <!-- 18. Vision close -->
   <section class="slide slide--center">
-    <h1 class="slide__title">Jasper doesn&rsquo;t have to catch up. Jasper can lead.</h1>
+    <h1 class="slide__title grad">Jasper doesn&rsquo;t have to catch up. Jasper can <span class="k">lead</span>.</h1>
     <div class="title-underline"></div>
     <p class="slide__body">A model small town for the AI era. It starts with the people in this room.</p>
   </section>
 
+  <!-- 19. Contact -->
   <section class="slide slide--center">
     <img class="contact-logo" src="assets/logo-white.png" alt="SC Creative">
     <p class="slide__eyebrow">Local, and here to help.</p>
@@ -861,319 +268,13 @@
     <p class="contact-line">Sam Cole &middot; <a href="mailto:sam@samcolecreative.com">sam@samcolecreative.com</a> &middot; <span class="contact-line__placeholder">[phone]</span></p>
   </section>
 
-  <div class="deck-counter">1 / 5</div>
+  <div class="deck-counter"><b>1</b> / 19</div>
   <div class="deck-nav deck-nav--prev" aria-hidden="true"></div>
   <div class="deck-nav deck-nav--next" aria-hidden="true"></div>
 
-  <script>
-    const AI = (window.AI_CONFIG || { apiKey: "", model: "claude-haiku-4-5" });
-
-    // Type `text` into `el` one character at a time. Returns a Promise.
-    function typewriter(el, text, opts = {}) {
-      const speed = opts.speed ?? 18;               // ms per char
-      el.classList.add('typing');
-      el.textContent = '';
-      return new Promise(resolve => {
-        let i = 0;
-        (function tick() {
-          if (i >= text.length) { el.classList.remove('typing'); return resolve(); }
-          el.textContent += text[i++];
-          setTimeout(tick, speed);
-        })();
-      });
-    }
-
-    // Live streaming call to Claude. Rejects if no key so callers can fall back.
-    async function aiStream(messages, { system, onToken } = {}) {
-      if (!AI.apiKey) throw new Error('no-key');
-      const res = await fetch('https://api.anthropic.com/v1/messages', {
-        method: 'POST',
-        headers: {
-          'content-type': 'application/json',
-          'x-api-key': AI.apiKey,
-          'anthropic-version': '2023-06-01',
-          'anthropic-dangerous-direct-browser-access': 'true',
-        },
-        body: JSON.stringify({
-          model: AI.model || 'claude-haiku-4-5',
-          max_tokens: 1024,
-          stream: true,
-          system: system || undefined,
-          messages,
-        }),
-      });
-      if (!res.ok || !res.body) throw new Error('api-' + res.status);
-      const reader = res.body.getReader();
-      const decoder = new TextDecoder();
-      let buf = '';
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-        buf += decoder.decode(value, { stream: true });
-        const lines = buf.split('\n');
-        buf = lines.pop();
-        for (const line of lines) {
-          if (!line.startsWith('data:')) continue;
-          const data = line.slice(5).trim();
-          if (!data || data === '[DONE]') continue;
-          try {
-            const evt = JSON.parse(data);
-            if (evt.type === 'content_block_delta' && evt.delta?.type === 'text_delta') {
-              onToken?.(evt.delta.text);
-            }
-          } catch (_) { /* ignore partial */ }
-        }
-      }
-    }
-
-    // Orchestrate one AI beat: live when possible, real-cached fallback otherwise.
-    async function runAIBeat(el, { messages, system, fallbackText }) {
-      el.classList.add('ai-thinking');
-      el.textContent = 'Thinking…';
-      try {
-        let first = true;
-        await aiStream(messages, {
-          system,
-          onToken: t => { if (first) { el.textContent = ''; el.classList.remove('ai-thinking'); first = false; } el.textContent += t; },
-        });
-        el.classList.remove('ai-thinking');
-      } catch (_) {
-        el.classList.remove('ai-thinking');
-        await new Promise(r => setTimeout(r, 500)); // brief "thinking" beat
-        await typewriter(el, fallbackText, { speed: 12 });
-      }
-    }
-
-    // Live demo slide: type a business name, stream 3 real deliverables.
-    (function wireDemo() {
-      const input = document.getElementById('demo-input');
-      const go = document.getElementById('demo-go');
-      const socialEl = document.getElementById('demo-social');
-      const reviewEl = document.getElementById('demo-review');
-      const smsEl = document.getElementById('demo-sms');
-      if (!go || !input) return;
-
-      const socialFallback =
-        "🔥 Fall-off-the-bone tender, low & slow all night — Joe's Barbecue is fired up and ready for you today.\n" +
-        "🍖 Big trays, bigger flavor. Grab the crew and swing by Joe's Barbecue this weekend — first come, first served.\n" +
-        "🎉 New batch of brisket just hit the smoker. Come get it before it's gone — Joe's Barbecue, open till 8!";
-
-      const reviewFallback =
-        "Thank you for taking the time to share this — I'm sorry to hear your visit didn't live up to what you should expect from us. " +
-        "That's not the experience we want for anyone who walks through our door, and I'd genuinely like to make it right. " +
-        "Please reach out directly so we can hear more about what happened. " +
-        "We appreciate you giving Joe's Barbecue a try and hope for the chance to welcome you back soon.";
-
-      const smsFallback =
-        "Thanks for reaching out to Joe's Barbecue! We're closed for the night but read every message first thing in the morning and will get right back to you.";
-
-      async function runDemo() {
-        const name = input.value.trim() || "Joe's Barbecue";
-        go.disabled = true;
-        const originalLabel = go.textContent;
-        go.textContent = 'Working…';
-
-        try {
-          await Promise.all([
-            runAIBeat(socialEl, {
-              messages: [{ role: 'user', content: name }],
-              system: "You are a friendly small-business marketing assistant. Write 3 short, punchy, ready-to-post social media captions (each with a relevant emoji) for the business named by the user. No preamble — just the 3 captions, one per line.",
-              fallbackText: socialFallback,
-            }),
-            runAIBeat(reviewEl, {
-              messages: [{ role: 'user', content: name }],
-              system: "Write a calm, professional, warm reply to a hypothetical 1-star Google review for the named local business. 3-4 sentences. No preamble.",
-              fallbackText: reviewFallback,
-            }),
-            runAIBeat(smsEl, {
-              messages: [{ role: 'user', content: name }],
-              system: "Write a short, warm after-hours text-message auto-reply from the named local business to a customer who messaged after closing. 2 sentences. No preamble.",
-              fallbackText: smsFallback,
-            }),
-          ]);
-        } finally {
-          go.disabled = false;
-          go.textContent = originalLabel;
-        }
-      }
-
-      go.addEventListener('click', runDemo);
-      input.addEventListener('keydown', e => {
-        if (e.key === 'Enter') { e.preventDefault(); runDemo(); }
-      });
-    })();
-
-    // City of Jasper slide: mini live assistant.
-    (function wireCityAssistant() {
-      const input = document.getElementById('city-input');
-      const go = document.getElementById('city-go');
-      const answerEl = document.getElementById('city-answer');
-      if (!go || !input || !answerEl) return;
-
-      const trashFallback =
-        "Trash pickup for most of Jasper runs every Tuesday morning, so it's best to have your cart out by 6 a.m. " +
-        "Pickup days can vary a bit by street, so if you're not sure which day applies to your address, give City Hall a call or stop by during business hours and we'll look it up and get you squared away.";
-
-      async function runCityAsk() {
-        const question = input.value.trim() || 'When is my trash picked up?';
-        go.disabled = true;
-        const originalLabel = go.textContent;
-        go.textContent = 'Asking…';
-
-        try {
-          await runAIBeat(answerEl, {
-            messages: [{ role: 'user', content: question }],
-            system: "You are the friendly AI assistant for the City of Jasper, Alabama. Answer citizen questions helpfully and briefly (2-3 sentences) in a warm municipal tone. If you don't know a specific local detail, give a helpful general answer and point them to city hall.",
-            fallbackText: trashFallback,
-          });
-        } finally {
-          go.disabled = false;
-          go.textContent = originalLabel;
-        }
-      }
-
-      go.addEventListener('click', runCityAsk);
-      input.addEventListener('keydown', e => {
-        if (e.key === 'Enter') { e.preventDefault(); runCityAsk(); }
-      });
-    })();
-
-    // Capture original headline text up front (data-text is already present
-    // statically in the HTML so the copy is fully intact if JS never runs;
-    // this is a fallback for any data-typewriter element that omits it) so
-    // re-visits never wipe/rescramble the text.
-    document.querySelectorAll('[data-typewriter]').forEach(el => {
-      if (!el.dataset.text) el.dataset.text = el.textContent;
-    });
-
-    function typeActiveHeadlines() {
-      document.querySelectorAll('.slide.active [data-typewriter]:not(.typed)').forEach(el => {
-        el.classList.add('typed');
-        typewriter(el, el.dataset.text);
-      });
-    }
-
-    const slides = Array.from(document.querySelectorAll('.slide'));
-    let current = 0;
-    const counter = document.querySelector('.deck-counter');
-    function render() {
-      slides.forEach((s, i) => s.classList.toggle('active', i === current));
-      counter.textContent = (current + 1) + ' / ' + slides.length;
-      document.getElementById('deck-progress-fill').style.width = ((current + 1) / slides.length * 100) + '%';
-      typeActiveHeadlines();
-    }
-    function goTo(n) { current = Math.max(0, Math.min(slides.length - 1, n)); render(); }
-    function next() { goTo(current + 1); }
-    function prev() { goTo(current - 1); }
-    function toggleFullscreen() {
-      if (!document.fullscreenElement) document.documentElement.requestFullscreen();
-      else document.exitFullscreen();
-    }
-    document.addEventListener('keydown', e => {
-      const tag = (e.target.tagName || '').toLowerCase();
-      if (tag === 'input' || tag === 'textarea') return; // let the demo input receive keys
-      if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); next(); }
-      else if (e.key === 'ArrowLeft') { prev(); }
-      else if (e.key.toLowerCase() === 'f') { toggleFullscreen(); }
-    });
-    document.addEventListener('click', e => {
-      if (e.target.closest('a, button, input, textarea')) return;
-      (e.clientX < window.innerWidth / 3) ? prev() : next();
-    });
-    render();
-
-    // Ambient generative background: a slowly drifting field of nodes with
-    // faint connecting lines, in brand teal. Kept low-opacity so slide text
-    // always stays legible. Respects prefers-reduced-motion (one static frame).
-    (function ambientBackground() {
-      const canvas = document.getElementById('bg-canvas');
-      if (!canvas || !canvas.getContext) return;
-      const ctx = canvas.getContext('2d');
-      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      const TEAL = '28,199,195';
-      const NODE_COUNT = 60;
-      const LINK_DIST = 140;
-      let width, height, dpr;
-      let nodes = [];
-
-      function fit() {
-        dpr = window.devicePixelRatio || 1;
-        width = window.innerWidth;
-        height = window.innerHeight;
-        canvas.width = width * dpr;
-        canvas.height = height * dpr;
-        canvas.style.width = width + 'px';
-        canvas.style.height = height + 'px';
-        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      }
-
-      function makeNodes() {
-        nodes = Array.from({ length: NODE_COUNT }, () => ({
-          x: Math.random() * width,
-          y: Math.random() * height,
-          vx: (Math.random() - 0.5) * 0.18,
-          vy: (Math.random() - 0.5) * 0.18,
-          r: 1 + Math.random() * 1.6,
-        }));
-      }
-
-      function drawFrame() {
-        ctx.clearRect(0, 0, width, height);
-
-        // connecting lines between nearby nodes
-        for (let i = 0; i < nodes.length; i++) {
-          for (let j = i + 1; j < nodes.length; j++) {
-            const a = nodes[i], b = nodes[j];
-            const dx = a.x - b.x, dy = a.y - b.y;
-            const dist = Math.sqrt(dx * dx + dy * dy);
-            if (dist < LINK_DIST) {
-              const alpha = (1 - dist / LINK_DIST) * 0.15;
-              ctx.strokeStyle = `rgba(${TEAL},${alpha})`;
-              ctx.lineWidth = 1;
-              ctx.beginPath();
-              ctx.moveTo(a.x, a.y);
-              ctx.lineTo(b.x, b.y);
-              ctx.stroke();
-            }
-          }
-        }
-
-        // nodes
-        for (const n of nodes) {
-          ctx.fillStyle = `rgba(${TEAL},0.22)`;
-          ctx.beginPath();
-          ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
-          ctx.fill();
-        }
-      }
-
-      function step() {
-        for (const n of nodes) {
-          n.x += n.vx;
-          n.y += n.vy;
-          if (n.x < 0 || n.x > width) n.vx *= -1;
-          if (n.y < 0 || n.y > height) n.vy *= -1;
-        }
-        drawFrame();
-        raf = requestAnimationFrame(step);
-      }
-
-      let raf = null;
-      fit();
-      makeNodes();
-      drawFrame();
-
-      if (!reduceMotion) {
-        raf = requestAnimationFrame(step);
-      }
-
-      window.addEventListener('resize', () => {
-        fit();
-        makeNodes();
-        drawFrame();
-      });
-    })();
-  </script>
+  <script src="js/ai-engine.js"></script>
+  <script src="js/background.js"></script>
+  <script src="js/deck.js"></script>
 
 </body>
 </html>
