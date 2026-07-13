@@ -45,8 +45,18 @@
   });
   document.addEventListener('click', e => {
     // Interactive elements never trigger slide navigation.
-    if (e.target.closest('a, button, input, textarea, .ai-window, .check-item')) return;
-    (e.clientX < window.innerWidth / 3) ? prev() : next();
+    if (e.target.closest('a, button, input, textarea, .ai-window')) return;
+    const goNext = e.clientX >= window.innerWidth / 3;
+    // On a checklist slide, a "next" tap ticks the next unchecked item first;
+    // only once all are checked does a tap advance to the next slide.
+    if (goNext) {
+      const checks = slides[current].querySelectorAll('.check-item');
+      if (checks.length) {
+        const pending = Array.from(checks).find(c => !c.classList.contains('checked'));
+        if (pending) { pending.classList.add('checked'); return; }
+      }
+    }
+    goNext ? next() : prev();
   });
   render();
 
@@ -153,40 +163,4 @@
     input.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); runDemo(); } });
   })();
 
-  /* ---------- city of jasper: live assistant ---------- */
-  (function wireCity() {
-    const input = document.getElementById('city-input');
-    const go = document.getElementById('city-go');
-    const answerEl = document.getElementById('city-answer');
-    if (!go || !input || !answerEl) return;
-
-    const CITY_SYS =
-      "You are the friendly AI assistant for the City of Jasper, Alabama. Answer citizen questions helpfully and briefly (2-3 sentences) in a warm municipal tone. " +
-      "You may use web search for real, current Jasper/Walker County details when helpful. If you don't know a specific local detail, give a helpful general answer and point them to city hall.";
-    const trashFallback =
-      "Trash pickup for most of Jasper runs every Tuesday morning, so it's best to have your cart out by 6 a.m. " +
-      "Pickup days can vary a little by street — if you're not sure which day applies to your address, give City Hall a call or stop by and we'll look it up and get you squared away.";
-
-    async function runCity() {
-      const q = input.value.trim() || 'When is my trash picked up?';
-      go.disabled = true;
-      const label = go.innerHTML;
-      go.textContent = 'Asking…';
-      try {
-        await runAIBeat(answerEl, {
-          messages: [{ role: 'user', content: q }],
-          system: CITY_SYS,
-          tools: hasKey() ? [{ type: 'web_search_20260209', name: 'web_search' }] : undefined,
-          fallbackText: trashFallback,
-          thinkingLabel: 'Thinking…',
-        });
-      } finally {
-        go.disabled = false;
-        go.innerHTML = label;
-      }
-    }
-
-    go.addEventListener('click', runCity);
-    input.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); runCity(); } });
-  })();
 })();

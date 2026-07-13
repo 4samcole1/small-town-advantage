@@ -85,6 +85,51 @@
     }
   }
 
+  /* ---- City of Jasper: auto-playing internal-procedure assistant ---- */
+  const CITY_QA = [
+    {
+      q: "What's our full procedure for approving a downtown special-event permit — and which departments sign off?",
+      a: "Special-event permits run through four steps:\n1) Applicant submits the event form to the City Clerk at least 30 days out.\n2) Public Works reviews street closures & barricades; Police reviews traffic & staffing; Fire reviews access & occupancy.\n3) Each department signs off in the permit portal.\n4) The Clerk issues the permit and notifies the applicant.\nTypical turnaround: 5–7 business days. Want me to draft the applicant email and the department routing checklist?",
+    },
+    {
+      q: "Draft a step-by-step SOP for onboarding a new Public Works employee.",
+      a: "Public Works onboarding SOP:\n1) HR opens the personnel file and enrolls benefits.\n2) IT issues email, radio, and fuel card.\n3) Supervisor runs OSHA + equipment safety orientation and logs the sign-off.\n4) Issue PPE and uniforms.\n5) Verify CDL if the role requires driving.\n6) Schedule 30/60/90-day check-ins in the personnel file.\nI can generate the printable checklist and the welcome packet.",
+    },
+    {
+      q: "A resident is disputing a water bill. What's our policy, and what are the resolution steps?",
+      a: "Billing-dispute procedure:\n1) Log the dispute in the utility system by account number.\n2) Pull the last three read cycles and check for a spike or an estimated read.\n3) If a leak is likely, offer the one-time leak adjustment allowed by ordinance.\n4) Send the resident a written explanation within 10 business days.\n5) If still unresolved, escalate to the Utility Board.\nI can draft the resident letter and the internal case note now.",
+    },
+    {
+      q: "What forms and approvals are needed to close a street for a festival on the square?",
+      a: "Street-closure packet:\n1) Special Event application\n2) Certificate of insurance naming the City\n3) Traffic-control plan approved by Police\n4) Public Works barricade request\n5) Council notification if the closure runs over 24 hours\nSubmit at least 30 days ahead. I can pre-fill the barricade request and the Council memo.",
+    },
+  ];
+  let cityIdx = 0, cityPlaying = false, cityAutoPlayed = false;
+
+  async function runCity() {
+    if (!typewriter || cityPlaying) return;
+    const qEl = document.getElementById('city-q');
+    const aEl = document.getElementById('city-answer');
+    const nextBtn = document.getElementById('city-next');
+    if (!qEl || !aEl) return;
+    cityPlaying = true;
+    if (nextBtn) { nextBtn.disabled = true; }
+    const item = CITY_QA[cityIdx % CITY_QA.length];
+    aEl.textContent = '';
+    await typewriter(qEl, item.q, { speed: 24 });      // the city "types" its query
+    aEl.classList.add('ai-thinking');
+    aEl.textContent = 'Checking city procedures…';
+    await delay(750);
+    aEl.classList.remove('ai-thinking');
+    await typewriter(aEl, item.a, { speed: 10 });      // the answer shown to staff
+    cityIdx++;
+    cityPlaying = false;
+    if (nextBtn) nextBtn.disabled = false;
+  }
+
+  const cityNext = document.getElementById('city-next');
+  if (cityNext) cityNext.addEventListener('click', runCity);
+
   function activate(slide) {
     stopClocks();
     agentRun++; // cancel any in-flight agent run from a previous slide
@@ -93,12 +138,11 @@
     slide.querySelectorAll('[data-typedemo]').forEach(typedemo);
     const agent = slide.querySelector('[data-agent]');
     if (agent) runAgent(agent);
+    if (slide.querySelector('[data-citydemo]') && !cityAutoPlayed) {
+      cityAutoPlayed = true;
+      runCity();
+    }
   }
-
-  // Interactive checklist — wired once.
-  document.querySelectorAll('.check-item').forEach(item => {
-    item.addEventListener('click', () => item.classList.toggle('checked'));
-  });
 
   window.DeckActive = { activate };
 })();

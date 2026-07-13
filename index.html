@@ -80,18 +80,16 @@
       <div class="scenario__arrow" aria-hidden="true">&rarr;</div>
       <div class="scenario__step scenario__step--result"><p class="scenario__label">The result</p><p class="scenario__text">&ldquo;Like adding a full-time clerk &mdash; without adding payroll.&rdquo;</p></div>
     </div>
-    <div class="ai-window" style="margin-top:1.6rem;max-width:760px;">
+    <div class="ai-window" data-citydemo style="margin-top:1.5rem;max-width:900px;">
       <div class="ai-window__bar">
         <span class="ai-window__dots"><i></i><i></i><i></i></span>
-        <span class="ai-window__name">City of Jasper &middot; AI Assistant</span>
+        <span class="ai-window__name">City of Jasper &middot; Internal Assistant</span>
         <span class="ai-window__live">Live</span>
       </div>
       <div class="ai-window__body">
-        <div class="ai-field">
-          <input type="text" id="city-input" class="ai-input" placeholder="Ask the city&rsquo;s AI assistant&hellip;" autocomplete="off">
-          <button type="button" id="city-go" class="ai-btn">Ask</button>
-        </div>
-        <div class="city-answer" id="city-answer" data-rest="Ask a question to see a live answer&hellip;"></div>
+        <div class="city-q"><span class="city-q__label">Staff query</span><span class="city-q__text" id="city-q"></span></div>
+        <div class="city-answer" id="city-answer" data-rest="Generating a staff question&hellip;"></div>
+        <button type="button" id="city-next" class="ai-btn ai-btn--sm">Ask another &rarr;</button>
       </div>
     </div>
   </section>
@@ -326,7 +324,6 @@
       <li class="start-list__item check-item"><span class="check-box"></span><p class="start-list__text">Let AI answer your after-hours messages so no lead ever goes cold.</p></li>
       <li class="start-list__item check-item"><span class="check-box"></span><p class="start-list__text">Ask it to write one week of your marketing &mdash; then edit, don&rsquo;t start from scratch.</p></li>
     </ol>
-    <p class="slide__body" style="margin-top:1.4rem;font-size:clamp(.95rem,1.4vw,1.2rem);color:var(--text-muted);">Tap each one to check it off. &nbsp;Then actually do it. 😊</p>
   </section>
 
   <!-- 18. Vision close -->
