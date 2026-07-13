@@ -88,20 +88,20 @@
   /* ---- City of Jasper: auto-playing internal-procedure assistant ---- */
   const CITY_QA = [
     {
-      q: "What's our full procedure for approving a downtown special-event permit — and which departments sign off?",
-      a: "Special-event permits run through four steps:\n1) Applicant submits the event form to the City Clerk at least 30 days out.\n2) Public Works reviews street closures & barricades; Police reviews traffic & staffing; Fire reviews access & occupancy.\n3) Each department signs off in the permit portal.\n4) The Clerk issues the permit and notifies the applicant.\nTypical turnaround: 5–7 business days. Want me to draft the applicant email and the department routing checklist?",
+      q: "What's our procedure for approving a downtown special-event permit — and who signs off?",
+      a: "Four steps: (1) the applicant submits the event form to the City Clerk 30 days out; (2) Public Works, Police, and Fire each review their part; (3) all three sign off in the permit portal; (4) the Clerk issues it. Want me to draft the applicant email and the routing checklist?",
     },
     {
-      q: "Draft a step-by-step SOP for onboarding a new Public Works employee.",
-      a: "Public Works onboarding SOP:\n1) HR opens the personnel file and enrolls benefits.\n2) IT issues email, radio, and fuel card.\n3) Supervisor runs OSHA + equipment safety orientation and logs the sign-off.\n4) Issue PPE and uniforms.\n5) Verify CDL if the role requires driving.\n6) Schedule 30/60/90-day check-ins in the personnel file.\nI can generate the printable checklist and the welcome packet.",
+      q: "Draft a quick SOP for onboarding a new Public Works employee.",
+      a: "HR opens the file and enrolls benefits → IT issues email, radio, and fuel card → the supervisor runs safety orientation and logs the sign-off → issue PPE → verify CDL if the role drives → set 30/60/90-day check-ins. I can generate the printable checklist.",
     },
     {
-      q: "A resident is disputing a water bill. What's our policy, and what are the resolution steps?",
-      a: "Billing-dispute procedure:\n1) Log the dispute in the utility system by account number.\n2) Pull the last three read cycles and check for a spike or an estimated read.\n3) If a leak is likely, offer the one-time leak adjustment allowed by ordinance.\n4) Send the resident a written explanation within 10 business days.\n5) If still unresolved, escalate to the Utility Board.\nI can draft the resident letter and the internal case note now.",
+      q: "A resident is disputing a water bill. What's our policy?",
+      a: "Log the dispute by account number, pull the last three read cycles, and check for a spike or an estimated read. If a leak is likely, offer the one-time adjustment allowed by ordinance, then send a written explanation within 10 business days. Still unresolved? Escalate to the Utility Board. I can draft the resident letter.",
     },
     {
-      q: "What forms and approvals are needed to close a street for a festival on the square?",
-      a: "Street-closure packet:\n1) Special Event application\n2) Certificate of insurance naming the City\n3) Traffic-control plan approved by Police\n4) Public Works barricade request\n5) Council notification if the closure runs over 24 hours\nSubmit at least 30 days ahead. I can pre-fill the barricade request and the Council memo.",
+      q: "What's needed to close a street for a festival on the square?",
+      a: "You'll need the Special Event application, a certificate of insurance naming the City, a Police-approved traffic plan, a Public Works barricade request, and Council notice if it runs over 24 hours. Submit 30 days out. I can pre-fill the barricade request and the Council memo.",
     },
   ];
   let cityIdx = 0, cityPlaying = false, cityAutoPlayed = false;

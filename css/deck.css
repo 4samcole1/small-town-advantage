@@ -176,9 +176,15 @@ body::before {
   line-height: 1.05;
   letter-spacing: -0.015em;
 }
-/* Gradient display treatment for hero/statement titles */
+/* Gradient display treatment for hero/statement titles — a bright title with a
+   soft teal shine that fades into the text on BOTH sides (no hard seam). */
 .slide__title.grad {
-  background: linear-gradient(118deg, #ffffff 0%, #dff6f4 42%, var(--teal-bright) 100%);
+  background: linear-gradient(105deg,
+    #eff7f7 0%, #eff7f7 34%,
+    var(--teal-bright) 50%,
+    #eff7f7 66%, #eff7f7 100%);
+  background-size: 200% auto;
+  background-repeat: no-repeat;
   -webkit-background-clip: text; background-clip: text;
   color: transparent;
 }
@@ -651,9 +657,13 @@ body::before {
 
 /* ---------- ACTIVE ELEMENTS (one per slide, varied) ---------- */
 
-/* Animated gradient sheen on statement titles */
-.slide__title.grad { background-size: 220% auto; animation: title-sheen 7s linear infinite; }
-@keyframes title-sheen { to { background-position: 220% center; } }
+/* Animated gradient sheen on statement titles — glides across and back
+   (alternate) so there's never a wrap seam / hard line. */
+.slide__title.grad { animation: title-sheen 5.5s ease-in-out infinite alternate; }
+@keyframes title-sheen {
+  from { background-position: 0% center; }
+  to   { background-position: 100% center; }
+}
 
 /* Count-up stat bars grow on activation */
 .stat__bar { transform-origin: center; }
@@ -666,16 +676,33 @@ body::before {
 .slide.active .stat-row .stat:nth-child(3) .stat__number { animation-delay: .60s; }
 @keyframes check-pop { from { opacity: 0; transform: scale(.3); } to { opacity: 1; transform: scale(1); } }
 
-/* Big-idea: small teal bar rises to meet the big one */
-.versus { display: flex; gap: clamp(2rem, 5vw, 4rem); align-items: flex-end; height: 26vh; margin: 2.2rem 0 1rem; }
-.versus__col { display: flex; flex-direction: column; align-items: center; gap: .8rem; height: 100%; justify-content: flex-end; }
-.versus__bar { width: clamp(70px, 8vw, 110px); border-radius: 12px 12px 0 0; }
-.versus__bar--big { height: 82%; background: linear-gradient(180deg, #33465e, #17222f); border: 1px solid var(--hair); }
-.versus__bar--small { height: 82%; background: linear-gradient(180deg, var(--teal-bright), var(--teal-mid)); box-shadow: 0 0 34px rgba(28,199,195,.32); }
-.slide.active .versus__bar--small { animation: rise-up 1.3s var(--ease) both; animation-delay: .3s; }
-@keyframes rise-up { from { height: 20%; } to { height: 82%; } }
-.versus__label { font-family: var(--font-heading); font-weight: 600; font-size: clamp(.8rem, 1.2vw, 1rem); color: var(--text-muted); }
-.versus__col--us .versus__label { color: var(--teal); }
+/* Big-idea: two bars rise to the SAME height, joined by a glowing "=" */
+.compare { display: flex; align-items: flex-end; gap: clamp(1.5rem, 4vw, 3.2rem); height: 30vh; margin: 2.2rem 0 1rem; }
+.compare__col { display: flex; flex-direction: column; align-items: center; gap: .85rem; height: 100%; justify-content: flex-end; }
+.compare__chip {
+  font-family: var(--font-heading); font-weight: 700; text-transform: uppercase; letter-spacing: .08em;
+  font-size: clamp(.56rem, .82vw, .7rem); padding: .35rem .8rem; border-radius: 999px;
+  color: var(--teal-ink); background: linear-gradient(120deg, var(--teal), var(--teal-mid));
+  box-shadow: 0 6px 18px rgba(28,199,195,.3); white-space: nowrap;
+}
+.compare__chip--muted { color: var(--text-muted); background: rgba(255,255,255,0.07); box-shadow: none; }
+.compare__bar { width: clamp(100px, 12vw, 175px); border-radius: 14px 14px 0 0; height: 82%; }
+.compare__bar--them { background: linear-gradient(180deg, #3a4d64, #1a2735); border: 1px solid var(--hair); }
+.compare__bar--us { background: linear-gradient(180deg, var(--teal-bright), var(--teal-mid)); box-shadow: 0 0 46px rgba(28,199,195,.4); }
+.slide.active .compare__bar--us { animation: rise-up 1.4s var(--ease) both .35s; }
+@keyframes rise-up { from { height: 16%; } to { height: 82%; } }
+.compare__eq {
+  align-self: center; font-family: var(--font-heading); font-weight: 800;
+  font-size: clamp(2.4rem, 5vw, 4rem); color: var(--teal);
+  text-shadow: 0 0 28px rgba(28,199,195,.55); padding-bottom: 2.5vh;
+}
+.compare__label { text-align: center; }
+.compare__label b { display: block; font-family: var(--font-heading); font-weight: 700; font-size: clamp(.9rem, 1.35vw, 1.15rem); color: var(--text); }
+.compare__label span { color: var(--text-muted); font-size: clamp(.72rem, 1.05vw, .9rem); }
+.compare__col--us .compare__label b { color: var(--teal); }
+
+/* Top-aligned slide (keeps a tall interactive panel clear of the logo) */
+.slide--top { justify-content: flex-start; padding-top: 12vh; }
 
 /* "Never sleeps": live clock card */
 .clock-card {
