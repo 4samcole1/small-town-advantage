@@ -44,7 +44,8 @@
     else if (e.key.toLowerCase() === 'f') { toggleFullscreen(); }
   });
   document.addEventListener('click', e => {
-    if (e.target.closest('a, button, input, textarea, .ai-window')) return;
+    // Interactive elements never trigger slide navigation.
+    if (e.target.closest('a, button, input, textarea, .ai-window, .check-item')) return;
     (e.clientX < window.innerWidth / 3) ? prev() : next();
   });
   render();
