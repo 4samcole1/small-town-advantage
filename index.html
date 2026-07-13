@@ -251,6 +251,72 @@
     font-size: clamp(1.2rem, 2vw, 1.8rem);
     flex-shrink: 0;
   }
+
+  /* Start list (slide 16) */
+  .start-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    margin-top: 2.5rem;
+    width: 100%;
+  }
+
+  .start-list__item {
+    display: flex;
+    align-items: center;
+    gap: 1.75rem;
+    background: var(--surface);
+    border: 1px solid var(--soft-border);
+    border-radius: 16px;
+    padding: 1.5rem 2rem;
+  }
+
+  .start-list__number {
+    font-family: var(--font-heading);
+    font-weight: 800;
+    font-size: clamp(1.8rem, 3.2vw, 2.6rem);
+    color: var(--teal);
+    flex-shrink: 0;
+    width: clamp(2.2rem, 3.5vw, 3rem);
+    text-align: center;
+  }
+
+  .start-list__item--accent .start-list__number { color: var(--gold); }
+
+  .start-list__text {
+    color: var(--text-neutral);
+    font-size: clamp(1.1rem, 1.9vw, 1.5rem);
+    line-height: 1.4;
+  }
+
+  /* Contact slide (slide 18) */
+  .contact-logo {
+    height: 14vh;
+    margin-bottom: 2.5rem;
+    opacity: .95;
+  }
+
+  .contact-line {
+    margin-top: 2.5rem;
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: clamp(1.2rem, 2.2vw, 1.7rem);
+    color: var(--text);
+  }
+
+  .contact-line a {
+    color: var(--teal);
+    text-decoration: none;
+  }
+
+  .contact-line a:hover { text-decoration: underline; }
+
+  .contact-line__placeholder {
+    color: var(--text-muted);
+    font-style: italic;
+    font-weight: 400;
+  }
 </style>
 </head>
 <body>
@@ -484,6 +550,38 @@
     <p class="slide__eyebrow">The honest part</p>
     <h1 class="slide__title">AI doesn&rsquo;t replace people. It replaces the tasks nobody has time for.</h1>
     <p class="slide__body">The human work &mdash; the handshake, the craft, the care &mdash; is exactly what this frees you to do more of.</p>
+  </section>
+
+  <section class="slide">
+    <p class="slide__eyebrow">Try this Monday</p>
+    <h1 class="slide__title">Three things you can do this week.</h1>
+    <ol class="start-list">
+      <li class="start-list__item">
+        <span class="start-list__number">1</span>
+        <p class="start-list__text">Pick your most annoying repetitive task and ask an AI tool to write the first draft.</p>
+      </li>
+      <li class="start-list__item">
+        <span class="start-list__number">2</span>
+        <p class="start-list__text">Let AI answer your after-hours messages so no lead ever goes cold.</p>
+      </li>
+      <li class="start-list__item start-list__item--accent">
+        <span class="start-list__number">3</span>
+        <p class="start-list__text">Ask it to write one week of your marketing &mdash; then edit, don&rsquo;t start from scratch.</p>
+      </li>
+    </ol>
+  </section>
+
+  <section class="slide slide--center">
+    <h1 class="slide__title">Jasper doesn&rsquo;t have to catch up. Jasper can lead.</h1>
+    <div class="title-underline"></div>
+    <p class="slide__body">A model small town for the AI era. It starts with the people in this room.</p>
+  </section>
+
+  <section class="slide slide--center">
+    <img class="contact-logo" src="assets/logo-white.png" alt="SC Creative">
+    <p class="slide__eyebrow">Local, and here to help.</p>
+    <p class="slide__body">If you ever want to talk through what this could look like for your business &mdash; I&rsquo;m right here in Walker County.</p>
+    <p class="contact-line">Sam Cole &middot; <a href="mailto:sam@samcolecreative.com">sam@samcolecreative.com</a> &middot; <span class="contact-line__placeholder">[phone]</span></p>
   </section>
 
   <div class="deck-counter">1 / 5</div>
