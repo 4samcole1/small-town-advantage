@@ -46,27 +46,32 @@ by a single throughline: **most small businesses fail — but they don't have to
 AI never replaces people in this story; it **funds** them. That reframe is the
 heart of the talk and ties the inspiration goal to the economy goal.
 
-## Slide-by-slide outline (~16 slides)
+## Slide-by-slide outline (~18 slides)
 
 1. **Title** — "The Small-Town Advantage: How AI Levels the Playing Field for Jasper." SC Creative white logo, name.
 2. **The hook / fear** — Name the elephant: "Isn't AI going to replace us / put us out of business?"
-3. **The hard truth** — Failure stats: ~1 in 5 fail in year one, ~half gone by year five, ~65% by year ten. *Why* — owners drown in busywork and never work *on* the business. (Framed as widely-cited BLS-style figures.)
-4. **The big idea** — For the first time, a Walker County shop can afford the same leverage as a company 100× its size.
+3. **The hard truth** — Everyone in the room — business *or* institution — runs on limited time and money. Sharpest example: business failure stats: ~1 in 5 fail in year one, ~half gone by year five, ~65% by year ten. *Why* — owners drown in busywork and never work *on* the business. (Framed as widely-cited BLS-style figures.)
+4. **The big idea** — For the first time, a Walker County shop — or a city office — can afford the same leverage as an organization 100× its size.
 5. **What AI actually is** — Plain English: "a very smart assistant that never sleeps." No jargon.
-6. **Scenario — The BBQ joint** — Problem (misses after-hours orders/calls) → simple AI fix → hours reclaimed.
-7. **Scenario — The HVAC contractor** — Problem (leads go cold, no time to follow up) → AI fix → result.
-8. **Scenario — The boutique on the square** — Problem (can't keep up with marketing/social) → AI fix → result.
-9. **Scenario — The insurance office** — Problem (buried in admin/paperwork) → AI fix → result.
-10. **The turning point** — Reclaimed hours → better margins → **hire people for the tangible, physical, day-to-day work** → scale.
-11. **The changed outcome** — Replay the failure stat, flipped: this business survives and grows.
-12. **The economy angle** — Every Main Street business doing this → more local jobs, money stays in Walker County, Jasper scales and competes.
-13. **Humans + AI (the honest part)** — AI doesn't replace people; it replaces the *tasks nobody has time for.* Humans + AI.
-14. **Start small** — 3 things anyone in the room can try Monday morning.
-15. **Vision close** — Jasper / Walker County as a model small town for the AI era.
-16. **SC Creative + contact** — Soft authority: local, here to help. Name, contact.
+6. **Scenario — City of Jasper** — Problem (citizen questions/requests pile up) → answer them without adding staff → hours reclaimed.
+7. **Scenario — Walker County Sheriff's Department** — Problem (deputies buried in paperwork/reports) → AI cuts report time → deputies stay on the street.
+8. **Scenario — Local non-profit** — Problem (tiny team, big mission) → AI helps with outreach & grant writing → more done with the same people.
+9. **Scenario — Clothing store on the square** — Problem (can't keep up with marketing/social) → AI fix → result.
+10. **Scenario — Insurance office** — Problem (buried in admin/paperwork) → AI fix → agents serve clients.
+11. **Scenario — HVAC contractor** — Problem (after-hours leads go cold) → AI fix → no lost jobs.
+12. **The turning point** — Reclaimed hours → better margins → **hire people for the tangible, physical, day-to-day work** → scale.
+13. **The changed outcome** — Replay the failure stat, flipped: this business survives and grows.
+14. **The economy angle** — Every Main Street business *and* public office doing this → more local jobs, money stays in Walker County, better services, Jasper scales and competes.
+15. **Humans + AI (the honest part)** — AI doesn't replace people; it replaces the *tasks nobody has time for.* Humans + AI.
+16. **Start small** — 3 things anyone in the room can try Monday morning.
+17. **Vision close** — Jasper / Walker County as a model small town for the AI era.
+18. **SC Creative + contact** — Soft authority: local, here to help. Name, contact.
 
-Each of the four scenarios (slides 6–9) shares a repeatable visual template:
-**business name → the problem → the simple AI fix → hours/dollars reclaimed.**
+The six scenarios (slides 6–11) share a repeatable visual template:
+**who → the problem → the simple AI fix → hours/dollars reclaimed.** They deliberately
+span the whole community — public sector (city, sheriff), non-profit, and business
+(retail, insurance, trades) — so both the inspiration goal and the economy/civic goal
+are carried by the same examples.
 
 ## Technical approach
 
@@ -95,8 +100,10 @@ Each of the four scenarios (slides 6–9) shares a repeatable visual template:
 
 ## Content
 
-- **All four scenarios are invented but locally believable Walker County businesses**
-  (not real clients) — so every owner in the room sees their own business in them.
+- **All six scenarios are invented but locally believable Walker County organizations**
+  (not real clients/agencies) — spanning public sector (City of Jasper, Walker County
+  Sheriff's Dept.), a non-profit, and businesses (clothing store, insurance, HVAC) — so
+  everyone in the room sees their own world in them.
 - Failure statistics presented as widely-cited/round figures, not precise claims.
 - Copy written for the ear as much as the eye — short lines, one idea per slide,
   designed to *support* Sam speaking, not to be read verbatim.
