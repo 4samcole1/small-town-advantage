@@ -172,8 +172,8 @@ body::before {
 .slide__title {
   font-family: var(--font-heading);
   font-weight: 800;
-  font-size: clamp(2.6rem, 5.6vw, 5rem);
-  line-height: 1.05;
+  font-size: clamp(2.15rem, 4.7vw, 4.2rem);
+  line-height: 1.07;
   letter-spacing: -0.015em;
 }
 /* Gradient display treatment for hero/statement titles — a bright title with a
