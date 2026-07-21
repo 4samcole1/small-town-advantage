@@ -255,14 +255,22 @@
   </section>
 
   <!-- Growth proof: Google Maps rank grid (before / after) -->
-  <section class="slide slide--center">
-    <p class="slide__eyebrow">Local visibility, proven</p>
-    <h1 class="slide__title">We get you found <span class="k">on the map</span>.</h1>
-    <p class="slide__body" style="max-width:74ch;">Google shows different results block-by-block. We track your rank across a grid of your service area &mdash; then work every point to the top. One real client, centered in <b>Jasper, AL</b>:</p>
-    <div class="geo-compare">
-      <div class="geo-panel">
-        <span class="geo-panel__tag geo-panel__tag--before">Before</span>
-        <div class="geogrid">
+  <section class="slide slide--geo" data-geo>
+    <div class="geo-split">
+      <div class="geo-copy">
+        <p class="slide__eyebrow">Local visibility, proven</p>
+        <h1 class="slide__title">We get you found <span class="k">on the map</span>.</h1>
+        <p class="slide__body">Google shows different results block-by-block, depending on where the searcher is standing. We map your rank across your whole service area &mdash; then work every point to the top. One real client, centered in <b>Jasper, AL</b>:</p>
+        <div class="geo-stats">
+          <div class="geo-stat"><span class="geo-stat__from">6.0</span><span class="geo-stat__arrow">&rarr;</span><span class="geo-stat__to">1.1</span><span class="geo-stat__label">average map rank</span></div>
+          <div class="geo-stat"><span class="geo-stat__from">0</span><span class="geo-stat__arrow">&rarr;</span><span class="geo-stat__to">48</span><span class="geo-stat__label">of 49 points in Google&rsquo;s top 3</span></div>
+        </div>
+      </div>
+
+      <div class="geo-stage">
+        <div class="geo-map" data-geo-map>
+          <iframe class="geo-map__bg" title="Live Google map of the Jasper, Alabama service area" src="https://maps.google.com/maps?q=33.849,-87.285&amp;z=12&amp;output=embed" loading="eager" referrerpolicy="no-referrer-when-downgrade"></iframe>
+          <div class="geogrid geogrid--before is-shown" aria-hidden="true">
           <span class="geo geo--r">7</span>
           <span class="geo geo--r">7</span>
           <span class="geo geo--r">7</span>
@@ -312,13 +320,9 @@
           <span class="geo geo--r">7</span>
           <span class="geo geo--r">7</span>
           <span class="geo geo--r">8</span>
-          <span class="geogrid__pin" aria-hidden="true"></span>
-        </div>
-      </div>
-      <div class="geo-arrow" aria-hidden="true">&rarr;</div>
-      <div class="geo-panel">
-        <span class="geo-panel__tag geo-panel__tag--after">After</span>
-        <div class="geogrid">
+          </div>
+
+          <div class="geogrid geogrid--after" aria-hidden="true">
           <span class="geo geo--g">1</span>
           <span class="geo geo--g">1</span>
           <span class="geo geo--g">1</span>
@@ -368,13 +372,17 @@
           <span class="geo geo--g">1</span>
           <span class="geo geo--g">1</span>
           <span class="geo geo--g">1</span>
+          </div>
+
           <span class="geogrid__pin" aria-hidden="true"></span>
         </div>
+
+        <div class="geo-toggle" role="presentation">
+          <span class="geo-toggle__tag geo-toggle__tag--before is-active">Before</span>
+          <span class="geo-toggle__track"><span class="geo-toggle__knob"></span></span>
+          <span class="geo-toggle__tag geo-toggle__tag--after">After</span>
+        </div>
       </div>
-    </div>
-    <div class="geo-stats">
-      <div class="geo-stat"><span class="geo-stat__from">6.0</span><span class="geo-stat__arrow">&rarr;</span><span class="geo-stat__to">1.1</span><span class="geo-stat__label">average map rank</span></div>
-      <div class="geo-stat"><span class="geo-stat__from">0</span><span class="geo-stat__arrow">&rarr;</span><span class="geo-stat__to">48</span><span class="geo-stat__label">of 49 points in Google&rsquo;s top 3</span></div>
     </div>
   </section>
 

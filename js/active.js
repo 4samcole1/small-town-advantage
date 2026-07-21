@@ -6,6 +6,7 @@
 (function () {
   const typewriter = window.DeckAI ? window.DeckAI.typewriter : null;
   let clockTimers = [];
+  let geoTimer = null;
 
   function countUp(el) {
     const target = parseFloat(el.dataset.countup);
@@ -138,8 +139,34 @@
   const cityNext = document.getElementById('city-next');
   if (cityNext) cityNext.addEventListener('click', runCity);
 
+  /* ---- Growth proof: flip the geo-grid between Before and After ---- */
+  function stopGeo() { if (geoTimer) { clearInterval(geoTimer); geoTimer = null; } }
+  function runGeo(slide) {
+    const map = slide.querySelector('[data-geo-map]');
+    if (!map) return;
+    const before = map.querySelector('.geogrid--before');
+    const after  = map.querySelector('.geogrid--after');
+    const toggle = slide.querySelector('.geo-toggle');
+    const tagB = slide.querySelector('.geo-toggle__tag--before');
+    const tagA = slide.querySelector('.geo-toggle__tag--after');
+    if (!before || !after) return;
+
+    let showAfter = false;
+    function paint() {
+      before.classList.toggle('is-shown', !showAfter);
+      after.classList.toggle('is-shown', showAfter);
+      if (toggle) toggle.classList.toggle('is-after', showAfter);
+      if (tagB) tagB.classList.toggle('is-active', !showAfter);
+      if (tagA) tagA.classList.toggle('is-active', showAfter);
+    }
+    // Always land on the slide showing "Before" first, then flip on a loop.
+    showAfter = false; paint();
+    geoTimer = setInterval(() => { showAfter = !showAfter; paint(); }, 2600);
+  }
+
   function activate(slide) {
     stopClocks();
+    stopGeo();
     agentRun++; // cancel any in-flight agent run from a previous slide
     slide.querySelectorAll('[data-countup]').forEach(countUp);
     startClocks(slide);
@@ -151,6 +178,7 @@
       runCity();
     }
     if (slide.hasAttribute('data-aeo')) runAeo(slide);
+    if (slide.hasAttribute('data-geo')) runGeo(slide);
   }
 
   /* ---- AEO slide: a mock AI answer types out and cites the local business ---- */
