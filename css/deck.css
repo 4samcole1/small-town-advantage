@@ -784,7 +784,8 @@ body::before {
 }
 .agent-run__log {
   padding: 1rem 1.2rem;
-  display: flex; flex-direction: column; gap: .55rem;
+  display: flex; flex-direction: column; justify-content: flex-end; gap: .55rem;
+  min-height: 15.5rem;   /* reserve space for all steps so the slide stays centered as they stream in */
 }
 .agent-step {
   display: flex; gap: .75rem; align-items: flex-start;
