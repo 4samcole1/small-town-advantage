@@ -46,6 +46,14 @@
 
   /* ---- multi-step agent runs (e.g. non-profit grant workflow) ---- */
   const AGENT_STEPS = {
+    automation: [
+      'Mapped the business’s workflows, tools &amp; bottlenecks',
+      'Designed a custom <b>CRM</b> — leads, jobs &amp; customers in one place',
+      'Automated <b>invoicing, payments &amp; finance</b> reminders',
+      'Built <b>scheduling, dispatch &amp; follow-ups</b> that run themselves',
+      'Connected every tool — <b>no more double data-entry</b>',
+      { text: '<b>Live dashboard launched</b> — revenue, pipeline &amp; tasks at a glance', final: true },
+    ],
     nonprofit: [
       'Read new email from <b>Aaron</b> — asking for a completed grant application and supporting documents for approval',
       'Downloaded the <b>grant application PDF</b>',

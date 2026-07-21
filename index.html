@@ -70,22 +70,8 @@
     <p class="slide__body">A website here, a Facebook page there, a listing nobody&rsquo;s touched &mdash; pieces that don&rsquo;t talk to each other, and don&rsquo;t add up.</p>
   </section>
 
-  <!-- 4. The shift → one connected system (consolidated) -->
-  <section class="slide slide--center">
-    <p class="slide__eyebrow">The shift</p>
-    <h1 class="slide__title">The businesses that win connect it into <span class="k">one system</span>.</h1>
-    <div class="sysflow">
-      <div class="sysnode"><div class="sysnode__badge">01</div><div class="sysnode__name">Blueprint</div><div class="sysnode__tag">Clarity &amp; strategy</div></div>
-      <div class="sysnode"><div class="sysnode__badge">02</div><div class="sysnode__name">Branding</div><div class="sysnode__tag">Identity &amp; design</div></div>
-      <div class="sysnode"><div class="sysnode__badge">03</div><div class="sysnode__name">Website</div><div class="sysnode__tag">Design &amp; build</div></div>
-      <div class="sysnode"><div class="sysnode__badge">04</div><div class="sysnode__name">AI Systems</div><div class="sysnode__tag">Automate &amp; scale</div></div>
-      <div class="sysnode"><div class="sysnode__badge">05</div><div class="sysnode__name">Growth</div><div class="sysnode__tag">Traffic &amp; revenue</div></div>
-    </div>
-    <p class="slide__body">Five pieces, pulling in the same direction. Here&rsquo;s how each one works.</p>
-  </section>
-
-  <!-- 6. Blueprint (01) -->
-  <section class="slide slide--top">
+  <!-- Blueprint (01) -->
+  <section class="slide">
     <div class="scenario-header">
       <span class="chip-icon num-chip" aria-hidden="true">01</span>
       <h1 class="slide__title">Blueprint</h1>
@@ -111,7 +97,7 @@
   </section>
 
   <!-- 7. Branding (02) -->
-  <section class="slide slide--top">
+  <section class="slide">
     <div class="scenario-header">
       <span class="chip-icon num-chip" aria-hidden="true">02</span>
       <h1 class="slide__title">Branding</h1>
@@ -137,7 +123,7 @@
   </section>
 
   <!-- 8. Website (03) -->
-  <section class="slide slide--top">
+  <section class="slide">
     <div class="scenario-header">
       <span class="chip-icon num-chip" aria-hidden="true">03</span>
       <h1 class="slide__title">Website</h1>
@@ -163,7 +149,7 @@
   </section>
 
   <!-- 8b. Website performance proof -->
-  <section class="slide slide--top">
+  <section class="slide slide--center">
     <p class="slide__eyebrow">Under the hood</p>
     <h1 class="slide__title">We don&rsquo;t build sites that <span class="k--red">underperform</span>.</h1>
     <p class="slide__body" style="max-width:78ch;margin-top:.9rem;font-size:clamp(1rem,1.5vw,1.3rem);">This is the same Google score that decides your search ranking. A typical local site &mdash; versus an SC Creative build.</p>
@@ -189,46 +175,34 @@
     </div>
   </section>
 
-  <!-- 9. AI Systems (04) + live demo -->
-  <section class="slide slide--demo slide--top">
+  <!-- AI Systems (04) — big-scale automation build plan -->
+  <section class="slide slide--top">
     <div class="scenario-header">
       <span class="chip-icon num-chip" aria-hidden="true">04</span>
       <h1 class="slide__title">AI Systems</h1>
       <span class="scenario-tag">Automate &amp; Scale</span>
     </div>
-    <p class="slide__body" style="margin:.1rem 0 1rem;max-width:74ch;font-size:clamp(.98rem,1.45vw,1.25rem);">This isn&rsquo;t a slideshow trick &mdash; it&rsquo;s the kind of AI we build for clients. Name any local business and watch it work:</p>
-    <div class="ai-window" style="max-width:960px;">
-      <div class="ai-window__bar">
-        <span class="ai-window__dots"><i></i><i></i><i></i></span>
-        <span class="ai-window__name">SC Creative &middot; AI Marketing Studio</span>
-        <span class="ai-window__live">Live</span>
+    <div class="showcase">
+      <div class="showcase__left">
+        <div class="showcase__challenge"><span class="mini-label">The challenge</span><p>Sticky notes, spreadsheets, and six apps that don&rsquo;t talk. Marketing is the easy part &mdash; <em>running</em> the business is where the time disappears.</p></div>
+        <div class="showcase__result"><span class="mini-label mini-label--teal">The result</span><p class="result-quote">&ldquo;One system that runs the business &mdash; while you sleep.&rdquo;</p></div>
       </div>
-      <div class="ai-window__body">
-        <div class="ai-field">
-          <input type="text" id="demo-input" class="ai-input" placeholder="Name a real Walker County business&hellip;" autocomplete="off">
-          <button type="button" id="demo-go" class="ai-btn">Watch AI go &rarr;</button>
-        </div>
-        <div class="demo-found" id="demo-found" data-rest="Enter a business name &mdash; AI will look it up and build its marketing."></div>
-        <div class="demo-grid">
-          <div class="demo-out">
-            <p class="demo-out__label"><span>&#128241;</span> This week&rsquo;s social posts</p>
-            <div class="demo-stream" id="demo-social" data-rest="Waiting for a business name&hellip;"></div>
+      <div class="showcase__caps">
+        <span class="mini-label mini-label--teal">Watch it plan a real build &mdash; start to finish</span>
+        <div class="agent-run" data-agent="automation">
+          <div class="agent-run__bar">
+            <span class="ai-window__dots"><i></i><i></i><i></i></span>
+            <span class="ai-window__name">SC Creative &middot; AI Systems Architect</span>
+            <span class="ai-window__live">Working</span>
           </div>
-          <div class="demo-out">
-            <p class="demo-out__label"><span>&#11088;</span> Reply to a bad review</p>
-            <div class="demo-stream" id="demo-review" data-rest="Waiting&hellip;"></div>
-          </div>
-          <div class="demo-out">
-            <p class="demo-out__label"><span>&#128172;</span> After-hours text back</p>
-            <div class="demo-stream" id="demo-sms" data-rest="Waiting&hellip;"></div>
-          </div>
+          <div class="agent-run__log"></div>
         </div>
       </div>
     </div>
   </section>
 
   <!-- 10. Growth (05) -->
-  <section class="slide slide--top">
+  <section class="slide">
     <div class="scenario-header">
       <span class="chip-icon num-chip" aria-hidden="true">05</span>
       <h1 class="slide__title">Growth</h1>
@@ -354,7 +328,7 @@
     <div class="online-chip">Online now &middot; <b data-clock>12:00:00 PM</b></div>
   </section>
 
-  <div class="deck-counter"><b>1</b> / 18</div>
+  <div class="deck-counter"><b>1</b> / 17</div>
   <div class="deck-nav deck-nav--prev" aria-hidden="true"></div>
   <div class="deck-nav deck-nav--next" aria-hidden="true"></div>
 
