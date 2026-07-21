@@ -919,3 +919,86 @@ body::before {
   .ta-lbl { opacity: 1; transform: none; }
   #deck-progress-fill { transition: none; }
 }
+
+/* ============================================================
+   SC Creative re-theme — new components
+   ============================================================ */
+
+/* Numbered header chip (01–05) reusing the .chip-icon box */
+.chip-icon.num-chip {
+  font-family: var(--font-heading);
+  font-weight: 800;
+  font-size: clamp(1.3rem, 2.1vw, 1.9rem);
+  color: var(--teal);
+  letter-spacing: .02em;
+}
+
+/* Scattered → connected online presence */
+.scatter { position: relative; width: 100%; height: 30vh; margin: 2rem 0 1rem; }
+.scatter__piece {
+  position: absolute; display: inline-flex; align-items: center; gap: .6rem;
+  background: var(--glass); border: 1px solid var(--hair); border-radius: 12px;
+  padding: .8rem 1.1rem; font-family: var(--font-heading); font-weight: 600;
+  color: var(--text-neutral); font-size: clamp(.8rem, 1.15vw, 1rem);
+  box-shadow: 0 12px 30px rgba(0,0,0,.3); backdrop-filter: blur(10px); white-space: nowrap;
+}
+.scatter__piece .ic { font-size: 1.2rem; }
+.scatter__piece:nth-child(1){ left:3%;  top:6%;  transform: rotate(-6deg); }
+.scatter__piece:nth-child(2){ left:58%; top:2%;  transform: rotate(5deg); }
+.scatter__piece:nth-child(3){ left:20%; top:54%; transform: rotate(3deg); }
+.scatter__piece:nth-child(4){ left:64%; top:58%; transform: rotate(-4deg); }
+.scatter__piece:nth-child(5){ left:38%; top:28%; transform: rotate(-2deg); opacity:.9; }
+/* connected: neat row, teal edge, connector line */
+.scatter--connected .scatter__piece {
+  transition: all .9s var(--ease);
+  border-left: 3px solid var(--teal); transform: none; opacity: 1; top: 40%;
+}
+.scatter--connected .scatter__piece:nth-child(1){ left:1%; }
+.scatter--connected .scatter__piece:nth-child(2){ left:20.8%; }
+.scatter--connected .scatter__piece:nth-child(3){ left:41%; }
+.scatter--connected .scatter__piece:nth-child(4){ left:60%; }
+.scatter--connected .scatter__piece:nth-child(5){ left:80%; opacity:1; }
+.scatter--connected::before {
+  content:""; position:absolute; left:1%; right:1%; top:calc(40% + 1.5rem); height:2px;
+  background:linear-gradient(90deg, transparent, var(--teal), transparent);
+}
+
+/* System overview — 5-pillar ecosystem */
+.ecosystem { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1rem; width: 100%; margin: 2.2rem 0 1rem; }
+.eco-pillar {
+  background: var(--glass); border: 1px solid var(--hair); border-top: 3px solid var(--teal);
+  border-radius: 14px; padding: 1.4rem 1.1rem; text-align: center;
+  box-shadow: 0 14px 40px rgba(0,0,0,.3);
+}
+.eco-pillar__num { font-family: var(--font-heading); font-weight: 800; font-size: .8rem; color: var(--teal); letter-spacing: .1em; }
+.eco-pillar__name { font-family: var(--font-heading); font-weight: 800; font-size: clamp(1rem, 1.5vw, 1.35rem); color: var(--text); margin-top: .4rem; }
+.eco-pillar__tag { color: var(--text-muted); font-size: clamp(.72rem, 1vw, .88rem); margin-top: .3rem; }
+.slide.active .eco-pillar { animation: pop-in .5s var(--ease) both; }
+.slide.active .eco-pillar:nth-child(1){ animation-delay:.15s; }
+.slide.active .eco-pillar:nth-child(2){ animation-delay:.30s; }
+.slide.active .eco-pillar:nth-child(3){ animation-delay:.45s; }
+.slide.active .eco-pillar:nth-child(4){ animation-delay:.60s; }
+.slide.active .eco-pillar:nth-child(5){ animation-delay:.75s; }
+
+/* AEO — mock AI answer */
+.aeo-wrap { width: 100%; max-width: 900px; margin-top: 1.4rem; }
+.aeo-q { display: flex; align-items: center; gap: .7rem; background: rgba(0,0,0,.28); border: 1px solid var(--hair); border-radius: 12px; padding: .85rem 1.1rem; }
+.aeo-q__label { flex-shrink: 0; font-family: var(--font-heading); font-weight: 700; text-transform: uppercase; letter-spacing: .1em; font-size: clamp(.58rem, .82vw, .7rem); color: var(--text-muted); }
+.aeo-q__text { color: var(--text); font-size: clamp(.9rem, 1.25vw, 1.12rem); }
+.aeo-a {
+  margin-top: 1rem; background: rgba(28,199,195,0.06);
+  border: 1px solid rgba(28,199,195,0.28); border-left: 3px solid var(--teal);
+  border-radius: 12px; padding: 1.1rem 1.3rem; color: var(--text-neutral);
+  font-size: clamp(.9rem, 1.25vw, 1.1rem); line-height: 1.5; min-height: 3rem;
+}
+.aeo-a b { color: var(--text); }
+
+/* Proof — client trust bar */
+.trust-bar { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; width: 100%; max-width: 960px; margin: 1.8rem auto 0; }
+.trust-logo {
+  background: #fff; border-radius: 14px; height: clamp(58px, 6.8vw, 86px);
+  display: flex; align-items: center; justify-content: center; overflow: hidden;
+  padding: .7rem 1.2rem;
+  box-shadow: 0 12px 30px rgba(0,0,0,.35);
+}
+.trust-logo img { max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain; display: block; }

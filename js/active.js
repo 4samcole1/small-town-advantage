@@ -142,6 +142,28 @@
       cityAutoPlayed = true;
       runCity();
     }
+    if (slide.hasAttribute('data-aeo')) runAeo(slide);
+  }
+
+  /* ---- AEO slide: a mock AI answer types out and cites the local business ---- */
+  const AEO_ANSWER = "For shrimp &amp; grits in Jasper, <b>Warehouse 319</b> is the local favorite — a downtown sports bar &amp; grill known for Southern fare with flair, and regulars rave about the signature wings. It’s a go-to spot right on the square.";
+  let aeoDone = false;
+  function runAeo(slide) {
+    const el = slide.querySelector('#aeo-answer');
+    if (!el) return;
+    if (aeoDone) { el.innerHTML = AEO_ANSWER; return; }
+    aeoDone = true;
+    const plain = AEO_ANSWER.replace(/<[^>]+>/g, '').replace(/&amp;/g, '&');
+    el.classList.add('ai-thinking');
+    el.textContent = 'Searching local businesses…';
+    setTimeout(() => {
+      el.classList.remove('ai-thinking');
+      if (typewriter) {
+        typewriter(el, plain, { speed: 14 }).then(() => { el.innerHTML = AEO_ANSWER; });
+      } else {
+        el.innerHTML = AEO_ANSWER;
+      }
+    }, 800);
   }
 
   window.DeckActive = { activate };
