@@ -1024,3 +1024,19 @@ body::before {
 .perf-ring::before { content: ""; position: absolute; inset: 5px; border-radius: 50%; background: #0c1622; }
 .perf-ring b { position: relative; font-family: var(--font-heading); font-weight: 800; font-size: clamp(.95rem, 1.35vw, 1.25rem); color: var(--c); }
 .perf-metric__lbl { font-size: clamp(.6rem, .86vw, .74rem); color: var(--text-muted); text-align: center; line-height: 1.2; }
+
+/* Website before/after case study */
+.ba-compare { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(1.2rem, 3.2vw, 2.6rem); width: 100%; max-width: 1080px; margin: 1.5rem auto 0; align-items: start; }
+.ba-item { display: flex; flex-direction: column; align-items: center; }
+.ba-frame { width: 100%; border-radius: 12px; overflow: hidden; border: 1px solid var(--hair); box-shadow: 0 22px 54px rgba(0,0,0,.5); background: #0c1622; }
+.ba-frame__bar { display: flex; align-items: center; gap: .45rem; padding: .5rem .75rem; background: #16202c; border-bottom: 1px solid var(--hair); }
+.ba-frame__bar i { width: 9px; height: 9px; border-radius: 50%; background: #3a4656; }
+.ba-frame img { width: 100%; display: block; }
+.ba-item--before .ba-frame { filter: saturate(.9) brightness(.9); }
+.ba-tag { margin-top: .85rem; font-family: var(--font-heading); font-weight: 700; text-transform: uppercase; letter-spacing: .09em; font-size: clamp(.62rem, .9vw, .76rem); padding: .38rem .85rem; border-radius: 999px; }
+.ba-tag--before { color: var(--text-muted); background: rgba(255,255,255,0.05); border: 1px solid var(--hair); }
+.ba-tag--after { color: var(--teal); background: rgba(28,199,195,0.1); border: 1px solid rgba(28,199,195,0.32); }
+.ba-metrics { display: flex; justify-content: center; gap: clamp(2rem, 6vw, 5rem); margin-top: 1.7rem; }
+.ba-metric { text-align: center; }
+.ba-metric b { display: block; font-family: var(--font-heading); font-weight: 800; font-size: clamp(1.9rem, 3.6vw, 3.1rem); color: var(--green); line-height: 1; letter-spacing: -.02em; }
+.ba-metric span { color: var(--text-muted); font-size: clamp(.78rem, 1.1vw, 1rem); margin-top: .45rem; display: block; }
