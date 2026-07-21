@@ -206,6 +206,14 @@ body::before {
 }
 .slide__body em { color: var(--text); font-style: italic; }
 
+.slide__cite {
+  margin-top: 1.6rem;
+  font-size: clamp(.72rem, 1vw, .9rem);
+  letter-spacing: .01em;
+  color: var(--text-neutral);
+  opacity: .5;
+}
+
 .title-underline {
   width: 132px; height: 5px; border-radius: 4px;
   margin-top: 1.6rem;
@@ -278,7 +286,7 @@ body::before {
 .stat-row {
   display: flex;
   gap: 1.6rem;
-  margin: 2.6rem 0;
+  margin: 2rem 0 1.2rem;
   width: 100%;
 }
 .stat {
@@ -1040,3 +1048,39 @@ body::before {
 .ba-metric { text-align: center; }
 .ba-metric b { display: block; font-family: var(--font-heading); font-weight: 800; font-size: clamp(1.9rem, 3.6vw, 3.1rem); color: var(--green); line-height: 1; letter-spacing: -.02em; }
 .ba-metric span { color: var(--text-muted); font-size: clamp(.78rem, 1.1vw, 1rem); margin-top: .45rem; display: block; }
+
+/* AEO — Fluff vs. Fact contrast */
+.fvf { display: grid; grid-template-columns: 1fr 1fr; gap: .9rem clamp(1rem, 3vw, 2.2rem); width: 100%; max-width: 1060px; margin: 1.7rem auto 0; text-align: left; }
+.fvf__head { font-family: var(--font-heading); font-weight: 800; text-transform: uppercase; letter-spacing: .1em; font-size: clamp(.7rem, 1vw, .84rem); }
+.fvf__head--fluff { color: var(--red); }
+.fvf__head--fact { color: var(--green); }
+.fvf__cell { border-radius: 12px; padding: 1rem 1.25rem; font-size: clamp(.9rem, 1.28vw, 1.14rem); line-height: 1.45; }
+.fvf__cell--fluff { background: rgba(224,87,79,.05); border: 1px solid rgba(224,87,79,.22); color: var(--text-muted); font-style: italic; }
+.fvf__cell--fact { background: rgba(62,224,122,.07); border: 1px solid rgba(62,224,122,.3); color: var(--text); }
+.fvf__cell--fact b { color: var(--green); font-weight: 700; }
+
+/* AEO 5-minute audit — phone mockup + checklist (from AEO playbook) */
+.audit-layout { display: flex; align-items: center; gap: clamp(1.5rem, 4vw, 3rem); margin-top: 1.6rem; width: 100%; }
+.start-list--compact { margin-top: 0; flex: 1; }
+.start-list--compact .start-list__item { padding: 1rem 1.3rem; gap: 1.1rem; }
+.start-list--compact .check-box { width: clamp(1.9rem, 2.8vw, 2.4rem); height: clamp(1.9rem, 2.8vw, 2.4rem); }
+.start-list--compact .start-list__text { font-size: clamp(.9rem, 1.25vw, 1.1rem); }
+.phone-mock {
+  flex: none; height: clamp(228px, 31vh, 290px); width: auto; aspect-ratio: 232/440;
+  background: #05070c; border: 3px solid #232c3c; border-radius: 28px;
+  box-shadow: 0 30px 70px rgba(0,0,0,0.55), 0 0 40px rgba(28,199,195,0.08);
+  padding: 7px; position: relative;
+}
+.phone-mock__notch { position: absolute; top: 20px; left: 50%; transform: translateX(-50%); width: 60px; height: 15px; border-radius: 10px; background: #05070c; border: 2px solid #232c3c; z-index: 2; }
+.phone-mock__screen { width: 100%; height: 100%; border-radius: 26px; overflow: hidden; background: linear-gradient(180deg, #0b1520, #060b14); display: flex; flex-direction: column; }
+.phone-mock__bar { display: flex; align-items: center; gap: .5rem; justify-content: center; padding: 1.5rem 1rem .8rem; border-bottom: 1px solid var(--hair); }
+.phone-mock__dot { width: 7px; height: 7px; border-radius: 50%; background: var(--green); box-shadow: 0 0 8px var(--green); animation: live-pulse 1.6s ease-in-out infinite; }
+.phone-mock__name { font-family: var(--font-heading); font-weight: 700; font-size: .78rem; color: var(--text-neutral); }
+.phone-mock__bubble { margin: .8rem .9rem 0; padding: .65rem .85rem; border-radius: 14px; font-size: .76rem; line-height: 1.4; max-width: 85%; }
+.phone-mock__bubble--user { align-self: flex-end; margin-left: auto; background: linear-gradient(135deg, var(--teal), var(--teal-mid)); color: #fff; border-bottom-right-radius: 4px; }
+.phone-mock__bubble--ai { background: rgba(255,255,255,0.06); border: 1px solid var(--hair); border-bottom-left-radius: 4px; }
+.phone-mock__typing { display: inline-flex; gap: 4px; }
+.phone-mock__typing i { width: 6px; height: 6px; border-radius: 50%; background: var(--text-muted); animation: typing-bounce 1.2s ease-in-out infinite; }
+.phone-mock__typing i:nth-child(2) { animation-delay: .15s; }
+.phone-mock__typing i:nth-child(3) { animation-delay: .3s; }
+@keyframes typing-bounce { 0%, 60%, 100% { transform: translateY(0); opacity: .5; } 30% { transform: translateY(-4px); opacity: 1; } }
